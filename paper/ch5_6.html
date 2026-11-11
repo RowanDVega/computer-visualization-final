@@ -1,0 +1,150 @@
+<h3>4.5 实现细节与开源</h3>
+<p>系统核心代码约 1,250 行 Python 与 420 行 HTML/JavaScript，依赖只有 PyTorch、numpy、pandas、scipy 和 matplotlib。<code>run_all.sh</code> 可以一键复现“训练 → 预处理 → 诊断 → 出图 → 仪表盘”的全流程：在单卡 RTX 4090 上，12 组训练约需 30 分钟，其余分析步骤不到 1 分钟。仪表盘是纯静态文件（HTML + 2.1 MB 数据 + ECharts），双击即可离线打开，适合作为训练产物随检查点一起归档。全部源码、原始日志、处理结果和论文源文件都以 MIT 协议开源在 GitHub 仓库 <a href="https://github.com/RowanDVega/computer-visualization-final">https://github.com/RowanDVega/computer-visualization-final</a>，目录结构与使用方法见仓库 README；克隆后直接用浏览器打开 <code>web/index.html</code> 即可体验交互式 Demo。</p>
+
+<h2>第五章 案例分析与结果讨论</h2>
+
+<h3>5.1 全局概览：12 个运行的健康画像</h3>
+<p>图 4 是仪表盘的首屏，焦点运行为 R09（学习率尖峰），对比运行为基线 R01，其余运行作为灰色背景。KPI 磁贴显示 R09 处于“✕ 危险”状态，共 4 个异常事件，最优验证损失 1.4753 出现在第 1100 步。损失曲线上，第 1200 步之后蓝色曲线陡然抬升，并且在剩余 1300 步中始终没有回到灰色背景运行所在的区域，红色色带标出了“持续退化”区间。更新比和学习率小图在同一位置出现了尖峰，与损失曲线对齐。右侧总览表按最优验证损失升序排列，四档健康徽章（✓ 健康、! 关注、▲ 警告、✕ 危险）用图标、文字和颜色三重编码。表 7 汇总了全部运行的结果。</p>
+<figure><img src="figures/dash_overview.png" style="width:100%"><figcaption><b>图4</b> TrainScope 仪表盘首屏（焦点 R09，对比 R01）：控制栏、自然语言问答、KPI 磁贴、联动时间视图与运行健康总览</figcaption></figure>
+<div class="tcap"><b>表7</b> 各运行结果与智能体诊断摘要</div>
+<table>
+<thead><tr><th class="l">运行</th><th>最优验证</th><th>最优步</th><th>最终验证</th><th>泛化差</th><th>健康</th><th class="l">主要事件 → 首要根因</th></tr></thead>
+<tbody>
+<tr><td class="l">R06_noclip</td><td>1.4269</td><td>1300</td><td>1.5544</td><td>0.762</td><td>警告</td><td class="l">梯度爆炸@172 → 未启用裁剪；过拟合</td></tr>
+<tr><td class="l">R11_crash_resume</td><td>1.4400</td><td>1400</td><td>1.5016</td><td>0.623</td><td>关注</td><td class="l">过拟合（续训本身无异常）</td></tr>
+<tr><td class="l">R03_lr3e-3</td><td>1.4426</td><td>1300</td><td>1.5877</td><td>0.823</td><td>关注</td><td class="l">过拟合</td></tr>
+<tr><td class="l">R01_baseline</td><td>1.4439</td><td>1300</td><td>1.5146</td><td>0.637</td><td>关注</td><td class="l">过拟合</td></tr>
+<tr><td class="l">R10_fault_corrupt</td><td>1.4439</td><td>1300</td><td>1.4954</td><td>0.585</td><td>警告</td><td class="l">损失尖峰@1800 → 数据管道污染（98%）</td></tr>
+<tr><td class="l">R12_large</td><td>1.4615</td><td>1300</td><td>1.6394</td><td>0.906</td><td>关注</td><td class="l">过拟合 → 容量过剩（88%）</td></tr>
+<tr><td class="l">R07_bs16</td><td>1.4660</td><td>2499</td><td>1.4660</td><td>0.197</td><td>健康</td><td class="l">—</td></tr>
+<tr><td class="l">R09_fault_lrspike</td><td>1.4753</td><td>1100</td><td>2.2669</td><td>0.005</td><td>危险</td><td class="l">尖峰@1200 → 学习率异常（99%）；持续退化</td></tr>
+<tr><td class="l">R05_nowarmup</td><td>1.4911</td><td>2499</td><td>1.4911</td><td>0.325</td><td>警告</td><td class="l">注意力塌缩@450–1400 → 缺少预热（79%）</td></tr>
+<tr><td class="l">R02_lr3e-4</td><td>1.5030</td><td>2499</td><td>1.5030</td><td>0.250</td><td>健康</td><td class="l">—</td></tr>
+<tr><td class="l">R08_nodropout</td><td>1.5179</td><td>900</td><td>3.1976</td><td>2.997</td><td>关注</td><td class="l">过拟合@1100 → 容量过剩/无 dropout（92%）</td></tr>
+<tr><td class="l">R04_lr1e-2_noclip</td><td>2.4691</td><td>200</td><td>2.5191</td><td>−0.003</td><td>警告</td><td class="l">停滞、注意力塌缩 → 学习率过高；梯度爆炸 → 未裁剪</td></tr>
+</tbody></table>
+<p>图 5 用 3×4 小多图同时展示 12 个运行的训练/验证损失和异常色带。小多图让每个运行拥有独立的坐标系，避免 12 条曲线叠在一起；所有子图共享 x、y 轴范围，因此可以直接比较。从图中可以一眼看出四种“曲线形态”：健康收敛（R02、R07）、收敛后过拟合（R01、R03、R06、R08、R12）、整体停滞（R04）和突发断裂（R09、R10）。</p>
+<figure><img src="figures/fig_small_multiples.png" style="width:100%"><figcaption><b>图5</b> 12 个运行的损失小多图（蓝：训练，橙：验证，灰：逐步训练损失，圆点：最优验证点，色带：检测到的异常事件）</figcaption></figure>
+
+<h3>5.2 故障案例一：学习率尖峰的“不可逆损伤”</h3>
+<p>R09 在第 1200–1229 步把学习率放大了 25 倍（约 2.4e-2）。如图 7(a)，异常前训练损失约为 1.23，注入后逐步损失在 20 步内冲到 6.93，梯度范数从约 0.35 升到 18.5，最大模块更新比从 4.3e-3 跃升到 3.1e-2，超过了 1e-2 的经验上限。<b>关键发现是损伤不可逆</b>：学习率在第 1230 步恢复正常后，验证损失从 4.09（第 1200 步）只回落到 2.99（第 1300 步）、2.40（第 2000 步）和 2.27（第 2499 步），在剩下的 1270 步中都没有回到注入前的 1.48，相当于把模型打回了“二元语法”水平（约 2.5 nats）。</p>
+<p>图 6(b) 的模块热力图解释了原因：注入之后，L0.mlp 到 L5.mlp 的中间层梯度下降了 1–2 个数量级（热力图中呈现近乎白色的条带），而 embed 和 head 两端的梯度仍保持原来的量级。这说明中间层已经进入饱和或“死亡”状态，模型基本上只靠嵌入层和输出层做浅层预测，所以损失停在 n-gram 统计的水平。PCA 轨迹视图（图 12(a)）也从另一个角度印证了这一点：R09 的轨迹在第 1200 步突然向 PC1 负方向跳跃了约 12 个单位，离开了健康运行所在的区域，之后再也没有回来。由于 PC1 的载荷在 12 个中间模块上几乎相等（约 0.3），它可以理解为“网络整体梯度强度”，这一跳跃正是中间层梯度坍缩的低维投影。</p>
+<p>智能体的诊断如图 8 所示。Monitor 在第 1200 步（零延迟）同时报告了损失尖峰、梯度爆炸、更新比跃升和持续退化 4 个事件。Diagnostician 的取证工具测得事件窗口学习率是前序窗口的 12.9 倍、更新比升至 1.8e-2、验证损失同步上升 0.20，因此以 99% 的置信度判定为“学习率过高/调度异常”。对于持续退化事件，它把时间上相关联的前序冲击纳入证据，判定为“前序冲击造成的不可逆损伤”（86%）。Advisor 给出两条建议：检查调度器配置，以及终止当前运行、回滚到第 1100 步（验证最优）的检查点。按本实验的数据计算，如果在第 1230 步就采纳这条建议，可以节省剩余 51% 的训练算力，并保住 1.4753 的验证损失，而不是最终的 2.2669。</p>
+<figure><img src="figures/fig_module_heatmap.png" style="width:100%"><figcaption><b>图6</b> 模块×步梯度热力图（log10，10 步聚合）：(a) 基线；(b) 学习率尖峰后中间层梯度坍缩；(c) 标签污染期间全模块梯度短暂增强后完全恢复</figcaption></figure>
+
+<h3>5.3 故障案例二：数据污染与学习率问题的区分</h3>
+<p>R10 在第 1800–1839 步把标签替换为随机字符。从损失曲线看，它和 R09 一样是一个巨大的尖峰（峰值 11.50，甚至比 R09 更高），只看曲线很容易误判为学习率问题。但多视图联动给出了完全不同的证据（图 7(b)）：</p>
+<ul>
+<li><b>学习率与更新比没有变化</b>：学习率比值为 0.81（余弦衰减造成的自然下降），开启了裁剪的更新比只从 2.2e-3 小幅波动到 2.6e-3，远低于 R09 的 3.1e-2；</li>
+<li><b>损失高于随机猜测</b>：峰值 11.50 远大于 ln65=4.17，而污染期间的平均损失 4.19 恰好接近 ln65，说明模型在几十步内就“学会”了对随机标签输出接近均匀的分布；</li>
+<li><b>验证损失几乎不动</b>：验证损失从 1.458（第 1800 步）只变化到 1.493（第 1900 步），随后在第 2000 步回到 1.453。验证集作为“未受污染的对照组”表明权重没有受到实质性损伤；</li>
+<li><b>模块热力图显示“全面、短暂、可恢复”</b>：图 6(c) 中所有模块在第 1800 步同时变深（梯度增强），在第 1840 步后迅速恢复为与基线一致的条纹模式。这与 R09 的“中间层永久坍缩”形成鲜明对比。</li>
+</ul>
+<p>知识库据此以 98% 的置信度判定为“数据管道污染”，建议“隔离第 1800–1841 步对应的数据分片，校验 tokenizer/标签对齐与样本哈希；该段损失无需回滚”。这条建议与 R09 的“回滚”建议完全不同，体现了根因区分对实际决策的价值：对 R10 而言回滚是不必要的，平滑训练损失在第 2052 步就回到了污染前的水平，最终验证损失（1.4954）与基线（1.5146）相当，甚至略好。图 9 展示了用户在问答框中输入“R10 为什么出问题？”之后的界面：系统自动把焦点切换到 R10，把四个时间视图缩放到 1600–2091 步，并把注意力探针定位到第 1800 步，同时在回答框中列出事件、根因、置信度和建议。</p>
+<figure><img src="figures/fig_detection.png" style="width:100%"><figcaption><b>图7</b> 注入故障的放大视图（灰带为真实注入区间）：(a) R09 学习率尖峰；(b) R10 标签污染。下排为梯度范数，嵌入小图为最大模块更新比（红色虚线为 1e-2）</figcaption></figure>
+<figure><img src="figures/dash_agent.png" style="width:100%"><figcaption><b>图8</b> 智能体诊断面板（R09）：事件卡片、根因置信度条与依据、处置建议，以及多智能体工作流节点图（节点大小表示消息数）和可回放的执行轨迹</figcaption></figure>
+<figure><img src="figures/dash_q_r10.png" style="width:100%"><figcaption><b>图9</b> 自然语言交互：提问“R10 为什么出问题？”后，系统自动聚焦、联动缩放到事件区间并给出带依据的回答</figcaption></figure>
+
+<h3>5.4 异常检测的定量评估</h3>
+<p>以注入故障的真实区间为真值，本文对 Monitor 做了事件级评估（表 8）。两个注入故障都在注入的第一步被检出（延迟 0 步），并且分别被 3 个和 2 个独立检测器同时命中，形成相互印证。在 6 个健康或仅有过拟合的运行（R01、R02、R07、R08、R11、R12）上，“突发类”检测器（尖峰、爆炸、跃升、发散、停滞、塌缩）的误报数为 0。全部 12 个运行共产生 22 个事件，其中 8 个梯度爆炸事件有 6 个来自不裁剪的 R04 与 R06，另外 2 个对应两次注入故障。合并间隔的设计也很重要：在 R04 中，第 411–540 步内相隔数十步的多次超阈值尖峰被归并为一个事件簇，否则同一个慢性问题会反复告警，造成告警疲劳。</p>
+<div class="tcap"><b>表8</b> 注入故障的事件级检测结果</div>
+<table>
+<thead><tr><th class="l">故障</th><th>真实区间</th><th>检出</th><th>延迟</th><th class="l">命中检测器</th><th class="l">首要根因（置信度）</th></tr></thead>
+<tbody>
+<tr><td class="l">学习率尖峰（R09）</td><td>1200–1229</td><td>✓</td><td>0 步</td><td class="l">loss_spike, grad_explosion, large_update</td><td class="l">学习率异常（99%）</td></tr>
+<tr><td class="l">标签污染（R10）</td><td>1800–1839</td><td>✓</td><td>0 步</td><td class="l">loss_spike, grad_explosion</td><td class="l">数据管道污染（98%）</td></tr>
+<tr><td class="l">健康运行误报</td><td>—</td><td colspan="2">0 次</td><td class="l" colspan="2">6 个运行共 15,000 步</td></tr>
+</tbody></table>
+<p>需要客观说明的是，这一评估的规模很小（2 个注入故障），检测器阈值也是在同一数据上通过 EDA 调整的，存在过拟合于本数据集的风险。开发过程中本文也记录到了知识库的真实失败案例：早期版本把 R04 中孤立的梯度尖峰误判为“数据污染”（置信度 37%），原因是“验证损失不变”这条规则在没有训练损失飙升的情况下也会触发；加上“峰值比前序高 1.0”的前置条件后才得到纠正。这说明规则知识库需要用更多故障样本做系统的回归测试。</p>
+
+<h3>5.5 表征层洞察：注意力熵与预热</h3>
+<p>注意力熵视图揭示了损失曲线上看不到的内部动态（图 10）。初始化时所有头的熵都约为 4.55 nats（接近均匀分布），在基线 R01 中，平均熵在前 300 步迅速下降到 2.92，之后缓慢稳定在 2.3 左右。到训练结束，L0 层出现了熵仅为 0.04–0.10 的 3 个“尖锐头”，它们几乎只关注单个位置，类似于文献中描述的“前一字符头”（previous-token head）<sup>[20]</sup>；而 L1 层的各个头保持了 3.5 以上的高熵，负责聚合较长的上下文。这种按层分工的“头特化”是健康训练的标志，因此本文的检测器只对“全局平均熵 &lt; 0.5”的塌缩报警，而不会对单个低熵头报警。早期版本的检测器曾因单头低熵对几乎所有运行误报，这是 EDA 修正的又一个例子。</p>
+<figure><img src="figures/fig_attention.png" style="width:100%"><figcaption><b>图10</b> 层×头平均注意力熵的演化：上排为基线 R01（逐步特化），下排为 R04（学习率 1e-2，全局塌缩）</figcaption></figure>
+<p>与基线相比，R04 的平均熵在 300 步内就塌缩到 0.27，此后一直低于 0.1，所有头都只关注单个位置，模型因此无法利用上下文，损失停在 2.5 附近（停滞）。更有启发的是 R05（去掉预热，其余与 R03 相同）：平均熵在第 100 步降到 1.33，第 800 步降到 0.36，触发了“注意力塌缩”告警（第 450–1400 步）；但它没有像 R04 那样一直停滞，在学习率按余弦衰减的过程中，熵逐渐恢复到第 2499 步的 1.26，最终验证损失达到 1.491，代价是收敛明显变慢（R03 在第 1300 步就达到 1.443）。图 11 是暗色主题下仪表盘对 R05 的分析画面：通过“看 300 到 1600 步”的问句完成缩放，注意力视图显示第 300 步时 L1–L5 层大部分头的熵已低于 1。这一现象与 Zhai 等人提出的“注意力熵塌缩”<sup>[17]</sup>以及 Wortsman 等人在小模型上复现的“注意力 logit 增长”不稳定性<sup>[19]</sup>相吻合：没有预热时，训练初期以峰值学习率更新 Q/K 投影，注意力 logits 迅速增大，softmax 进入饱和区。预热的作用正是在 logits 尺度稳定之前限制更新幅度<sup>[18]</sup>。智能体以 79% 的置信度把这一事件归因为“缺少学习率预热”，与文献结论一致。</p>
+<figure><img src="figures/dash_dark.png" style="width:100%"><figcaption><b>图11</b> 暗色主题下的 R05（无预热）分析：自然语言缩放到 300–1600 步，注意力塌缩色带与层×头熵热力图</figcaption></figure>
+
+<h3>5.6 降维视图的洞察</h3>
+<p><b>训练状态轨迹</b>。图 12(a) 中，PC1 与 PC2 共解释了 14 维模块梯度空间 89.0% 的方差（69.4% 与 19.6%）。由图 12(b) 的载荷可知，PC1 在 12 个中间模块上的载荷近乎相等，代表“整体梯度强度”；PC2 的载荷由 embed/L0.attn（+0.55 以上）与深层/head（−0.1 至 −0.25）构成对比，代表“梯度在浅层与深层之间的分配”。健康运行的轨迹都从右侧起点出发，沿着一条狭窄的“走廊”向左下方缓慢移动，最终汇聚到相近的终点。R04 的轨迹先沿 PC2 正方向大幅上升到 +7，说明梯度高度集中在嵌入层和第一层注意力（与图 10 中 L0 的塌缩相互印证），然后在高位来回振荡，完全偏离了走廊。R09 的轨迹在注入点向 PC1 负方向剧烈跳跃。由此可见，一个 2D 轨迹视图就能把“健康/慢性异常/急性异常”三类训练形态区分开，非常适合作为大规模超参搜索时的概览视图。</p>
+<figure><img src="figures/fig_pca.png" style="width:100%"><figcaption><b>图12</b> 训练状态轨迹 PCA：(a) 11 个 6 层运行在模块梯度空间中的轨迹（灰色为其余运行）；(b) 前两个主成分的载荷</figcaption></figure>
+<p><b>字符嵌入空间</b>。对基线模型 65×384 的字符嵌入做 t-SNE（图 13(b)），呈现出非常清晰的语义结构：标点符号（, ; : ? ! . -）聚在左上角；元音（a e i o u 及其大写）聚在中心；更有意思的是，<b>大小写字母成对出现</b>，如 b/B、d/D、s/S、m/M、h/H、k/K、j/J、q/Q 等在图中紧挨在一起。为了确认这不是 t-SNE 的投影假象，本文在原始 384 维空间中做了定量验证：26 对大小写字母的平均余弦相似度为 0.451，而全部字符对的平均值只有 0.017；在 26 个小写字母中，有 25 个（96.2%）的最近邻正是自己的大写形式。也就是说，模型仅仅通过预测下一个字符，就自发学到了“大小写是同一个字母”这一抽象概念。相比之下，PCA 投影（图 13(a)）主要把大写字母与小写字母、标点分开，反映的是全局方差最大的方向：在剧本语料中，大写字母大多出现在行首和角色名中，上下文分布与小写字母差别最大。两种投影互为补充，也说明在需要揭示局部邻域结构时，t-SNE 比 PCA 更合适。</p>
+<figure><img src="figures/fig_embed.png" style="width:100%"><figcaption><b>图13</b> 基线模型字符嵌入的二维投影：(a) PCA；(b) t-SNE。颜色与形状双重编码字符类别，每个点直接标注字符</figcaption></figure>
+
+<h3>5.7 超参数规律与决策建议</h3>
+<figure><img src="figures/fig_hparams.png" style="width:100%"><figcaption><b>图14</b> 超参数与结果：(a) 学习率敏感性；(b) 各运行最优与最终验证损失（灰线长度即过拟合回升量）</figcaption></figure>
+<p>结合图 14 与平行坐标视图（图 15），可以总结出以下对训练决策有参考价值的规律：</p>
+<ol>
+<li><b>学习率存在明显的“悬崖”</b>。在 3e-4 到 3e-3 区间，最优验证损失变化不大（1.503→1.443），但从 3e-3 增加到 1e-2 时，损失跃升到 2.469（R04），性能断崖式下降。曲线在悬崖之前是平坦的，这意味着靠近悬崖的配置“看起来很好”却极其脆弱。实践中应当选择悬崖左侧留有余量的学习率，并用更新比监控与悬崖之间的距离。</li>
+<li><b>“最优验证”与“最终验证”应分别看待</b>。图 14(b) 中，高学习率运行（R03、R06）达到最优的速度更快、最优值更低，但随后的过拟合回升也更大（0.145、0.127）；R08（无 dropout）在第 900 步达到 1.518 后一路回升到 3.198，泛化差高达 3.0。总体上，有 5 个运行恰好在第 1300 步达到最优（R11 在第 1400 步），之后开始过拟合，说明在 100 万字符的训练集上，约 21 个 epoch 当量（1300 步 × 16,384 字符）已经足够，<b>早停或保存最优检查点</b>可以直接带来 0.05–1.68 的验证损失收益。</li>
+<li><b>扩容不等于变好</b>。参数量增加 2.35 倍的 R12，最优验证损失（1.4615）反而比基线（1.4439）略差，过拟合回升更大（0.178），同时吞吐减半（45.1 万 vs 88.7 万 tokens/s）、显存增加 1.8 倍。这一结论符合“数据受限时扩大模型收益有限”的缩放规律。</li>
+<li><b>梯度裁剪是“保险”而非“性能”手段</b>。R06（不裁剪）的最优值 1.4269 是全场最佳，比裁剪的 R03 低 0.016，但它在第 172 步出现了一次梯度爆炸；R04 则因为不裁剪长期处于梯度爆炸状态。由于每个配置只有一个随机种子，0.016 的差距在噪声范围内，不能据此得出“裁剪有害”的结论。更稳妥的建议是保留裁剪，作为防御极端事件的保险。</li>
+<li><b>小批量的代价是吞吐而不是精度</b>。R07（batch=16）的损失波动率是基线的 2.06 倍（0.0485 vs 0.0236），GPU 吞吐只有基线的 68%，但由于每步处理的样本更少，到第 2500 步时它只看过基线 1/4 的数据，因此仍处于欠拟合阶段，没有出现过拟合（泛化差 0.197）。</li>
+<li><b>断点续训是安全的</b>。R11 经历崩溃和续训之后，最优验证损失为 1.4400，与基线的 1.4439 在同一水平（两者随机种子不同），说明检查点中保存的优化器状态和采样器随机状态足以保证续训轨迹的连续性；崩溃带来的真正风险在日志层面（重复与丢失），而这可以由第三章的清洗流程解决。</li>
+</ol>
+<figure><img src="figures/dash_pca_par.png" style="width:100%"><figcaption><b>图15</b> 仪表盘中的 PCA 轨迹视图与超参数平行坐标（焦点 R09 为蓝色，对比 R01 为橙色，其余为灰色背景）</figcaption></figure>
+
+<h3>5.8 讨论</h3>
+<p><b>可视化与智能体的分工</b>。在本系统中，智能体负责“把注意力引到正确的地方”，可视化负责“让人信服”。在 R09 与 R10 两个案例中，单看智能体的结论（“学习率异常 99%”“数据污染 98%”）用户未必会采信；但当这些结论与联动视图中的证据，如更新比曲线、模块热力图的白色条带、纹丝不动的验证损失，放在一起时，用户可以在几秒钟内自行完成验证。反过来，如果没有智能体，用户需要在 12 个运行 × 9 个视图中自己寻找异常，效率很低。确定性的知识库加上可回放的执行轨迹，保证了每个结论都可追溯、可复现，这在高成本的训练决策场景中比大模型自由生成的诊断文本更可靠。</p>
+<p><b>设计取舍</b>。focus+context 配色把同时高亮的运行限制在 3 个以内，牺牲了“一眼看到所有运行身份”的能力，换来的是色觉障碍友好和清晰的视觉层次；运行身份可以通过悬停、总览表和小多图（图 5）来补充。拒绝双 y 轴增加了视图数量，但通过联动缩放，多个视图在交互上表现为一个整体。</p>
+
+<h2>第六章 结论与展望</h2>
+<h3>6.1 研究贡献</h3>
+<p>本文围绕“大模型训练监控”这一高成本场景，设计并实现了 TrainScope 系统，主要贡献如下：</p>
+<ol>
+<li><b>一个真实、可复现的多维训练监控数据集</b>：12 组 GPT 训练、3 类真实注入故障、61,695 行原始日志，涵盖逐步、逐模块、逐注意力头的指标，并且保留了续训重复、记录丢失、计时污染等真实“脏数据”；</li>
+<li><b>面向训练日志的清洗与特征工程方法</b>：续训去重与丢失修复、计时污染识别、稳健 z 分数，以及模块梯度 PCA 轨迹和嵌入 t-SNE 两种降维视角；其中 EDA 直接推动了检测器的两次修正（更新比相对化、注意力塌缩全局化）；</li>
+<li><b>一个遵循可视化原则的交互式仪表盘</b>：9 类视图联动缩放、跨视图钻取、注意力动画、focus+context 配色、双主题和 URL 状态分享，并支持自然语言驱动视图操作；</li>
+<li><b>一个可解释的多智能体诊断工作流</b>：9 类检测器、取证工具、区分性根因知识库和可回放轨迹。对两个注入故障实现了零延迟检出和正确的根因区分，在健康运行上没有误报；</li>
+<li><b>若干对训练实践有参考价值的洞察</b>：学习率尖峰会造成中间层梯度坍缩式的不可逆损伤，而数据污染是可恢复的；缺少预热会引发可恢复的注意力熵塌缩；学习率存在性能悬崖；字符级模型会自发习得大小写对应关系（最近邻命中率 96.2%）。</li>
+</ol>
+<h3>6.2 局限性</h3>
+<ol>
+<li><b>规模局限</b>：实验基于 10.8M/25.4M 参数的字符级模型和单卡训练，没有覆盖真实大模型的分布式训练（多卡通信、流水线气泡、混合精度溢出），一些现象（如损失尖峰的频率与成因）在大规模下可能不同。</li>
+<li><b>统计效力不足</b>：每个配置只有一个随机种子，超参数之间的细微差异（如 R06 与 R03 的 0.016）无法给出显著性判断；异常检测评估只有 2 个注入故障，阈值是在同一数据上调整的，存在过拟合风险。</li>
+<li><b>知识库覆盖有限</b>：根因规则由人工编写，只覆盖了 9 种根因，对硬件故障、通信死锁、tokenizer 漂移等常见问题还没有建模；置信度来自规则得分的 softmax，并不是经过校准的概率。</li>
+<li><b>大模型能力未充分评估</b>：Reporter 的大模型润色是可选功能，本文实验都在离线模板模式下完成，没有定量评估大模型生成内容的忠实度；自然语言交互基于规则式意图识别，覆盖的问句形式有限。</li>
+<li><b>可用性未经用户研究</b>：仪表盘的设计依据可视化原则，但没有开展正式的用户实验（任务完成时间、正确率、主观负荷等）。</li>
+</ol>
+<h3>6.3 未来研究方向</h3>
+<ol>
+<li><b>实时流式监控</b>：把批处理流程改造为基于 WebSocket 的增量计算，让检测器和视图在训练过程中实时更新，并支持“一键回滚”等闭环操作。</li>
+<li><b>走向真实规模</b>：在多机多卡场景下增加通信、显存、数据加载等系统层指标，研究跨层（系统层—优化层—表征层）的联合根因分析。</li>
+<li><b>学习型检测与知识库</b>：在更大规模的故障注入语料上训练异常检测与根因分类模型，并用大模型从训练报告和事故复盘文档中自动扩充知识库，同时引入概率校准。</li>
+<li><b>大模型智能体的忠实度约束</b>：以本系统的结构化证据作为“工具”，研究大模型智能体在开放式问答中的证据引用和幻觉检测，让自然语言交互从规则式意图识别升级为可组合的视图操作语言。</li>
+<li><b>开展用户研究</b>：与有实际训练经验的工程师合作进行对照实验，量化系统在异常定位时间和决策正确率上的提升。</li>
+</ol>
+
+<h2>参考文献</h2>
+<div class="refs">
+<p>[1] ZHANG S, ROLLER S, GOYAL N, et al. OPT: Open pre-trained transformer language models[EB/OL]. arXiv:2205.01068, 2022.</p>
+<p>[2] LE SCAO T, FAN A, AKIKI C, et al. BLOOM: A 176B-parameter open-access multilingual language model[EB/OL]. arXiv:2211.05100, 2022.</p>
+<p>[3] CHOWDHERY A, NARANG S, DEVLIN J, et al. PaLM: Scaling language modeling with pathways[J]. Journal of Machine Learning Research, 2023, 24(240): 1-113.</p>
+<p>[4] ABADI M, BARHAM P, CHEN J, et al. TensorFlow: A system for large-scale machine learning[C]//Proceedings of the 12th USENIX Symposium on Operating Systems Design and Implementation (OSDI). Savannah: USENIX, 2016: 265-283.</p>
+<p>[5] BIEWALD L. Experiment tracking with Weights and Biases[CP/OL]. 2020. https://www.wandb.com/.</p>
+<p>[6] LIU D, CUI W, JIN K, et al. DeepTracker: Visualizing the training process of convolutional neural networks[J]. ACM Transactions on Intelligent Systems and Technology, 2018, 10(1): 1-25.</p>
+<p>[7] HOHMAN F, KAHNG M, PIENTA R, et al. Visual analytics in deep learning: An interrogative survey for the next frontiers[J]. IEEE Transactions on Visualization and Computer Graphics, 2019, 25(8): 2674-2693.</p>
+<p>[8] VIG J. A multiscale visualization of attention in the transformer model[C]//Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics: System Demonstrations. Florence: ACL, 2019: 37-42.</p>
+<p>[9] DIBIA V. LIDA: A tool for automatic generation of grammar-agnostic visualizations and infographics using large language models[C]//Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics: System Demonstrations. Toronto: ACL, 2023: 113-126.</p>
+<p>[10] KARPATHY A. The unreasonable effectiveness of recurrent neural networks[EB/OL]. (2015-05-21). https://karpathy.github.io/2015/05/21/rnn-effectiveness/.</p>
+<p>[11] RADFORD A, WU J, CHILD R, et al. Language models are unsupervised multitask learners[R]. OpenAI, 2019.</p>
+<p>[12] KARPATHY A. CS231n: Convolutional neural networks for visual recognition—Neural networks part 3: Learning and evaluation[EB/OL]. Stanford University, 2016. https://cs231n.github.io/neural-networks-3/.</p>
+<p>[13] VAN DER MAATEN L, HINTON G. Visualizing data using t-SNE[J]. Journal of Machine Learning Research, 2008, 9(86): 2579-2605.</p>
+<p>[14] MUNZNER T. Visualization analysis and design[M]. Boca Raton: CRC Press, 2014.</p>
+<p>[15] SHNEIDERMAN B. The eyes have it: A task by data type taxonomy for information visualizations[C]//Proceedings of the IEEE Symposium on Visual Languages. Boulder: IEEE, 1996: 336-343.</p>
+<p>[16] COHEN J M, KAUR S, LI Y, et al. Gradient descent on neural networks typically occurs at the edge of stability[C]//International Conference on Learning Representations (ICLR). 2021.</p>
+<p>[17] ZHAI S, LIKHOMANENKO T, LITTWIN E, et al. Stabilizing transformer training by preventing attention entropy collapse[C]//Proceedings of the 40th International Conference on Machine Learning (ICML). Honolulu: PMLR, 2023: 40770-40803.</p>
+<p>[18] XIONG R, YANG Y, HE D, et al. On layer normalization in the transformer architecture[C]//Proceedings of the 37th International Conference on Machine Learning (ICML). PMLR, 2020: 10524-10533.</p>
+<p>[19] WORTSMAN M, LIU P J, XIAO L, et al. Small-scale proxies for large-scale transformer training instabilities[C]//International Conference on Learning Representations (ICLR). 2024.</p>
+<p>[20] OLSSON C, ELHAGE N, NANDA N, et al. In-context learning and induction heads[EB/OL]. Transformer Circuits Thread, 2022. https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/.</p>
+<p>[21] HONG S, LIN Y, LIU B, et al. Data Interpreter: An LLM agent for data science[EB/OL]. arXiv:2402.18679, 2024.</p>
+<p>[22] PASCANU R, MIKOLOV T, BENGIO Y. On the difficulty of training recurrent neural networks[C]//Proceedings of the 30th International Conference on Machine Learning (ICML). Atlanta: PMLR, 2013: 1310-1318.</p>
+</div>
+
+<h2>附录 A 复现方式</h2>
+<p class="note">项目地址：<a href="https://github.com/RowanDVega/computer-visualization-final">https://github.com/RowanDVega/computer-visualization-final</a></p>
+<pre>git clone git@github.com:RowanDVega/computer-visualization-final.git
+cd computer-visualization-final
+pip install -r requirements.txt
+./run_all.sh                 # 训练 12 组 + 预处理 + 智能体诊断 + 出图 + 仪表盘数据
+SKIP_TRAIN=1 ./run_all.sh    # 已有日志时仅重跑分析（&lt; 1 分钟）
+# 浏览器打开 web/index.html；URL 参数示例：
+#   ?focus=R05_nowarmup&amp;cmp=R02_lr3e-4&amp;zoom=300,1600&amp;theme=dark&amp;q=R09为什么出问题</pre>

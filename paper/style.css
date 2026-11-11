@@ -1,0 +1,38 @@
+@page { size: A4; margin: 2.5cm; @bottom-center { content: counter(page); } }
+html { font-size: 12pt; }
+body {
+  font-family: "Times New Roman", "Noto Serif CJK SC", "Noto Serif CJK JP", serif;
+  line-height: 1.5; color: #000; margin: 0; text-align: justify;
+}
+h1.title { font-size: 20pt; text-align: center; margin: 0 0 8pt; line-height: 1.35; font-family: "Noto Sans CJK SC", sans-serif; }
+.subtitle { text-align: center; font-size: 12pt; margin-bottom: 4pt; }
+.author { text-align: center; font-size: 10.5pt; color: #333; margin-bottom: 16pt; }
+h2 { font-size: 15pt; font-family: "Noto Sans CJK SC", sans-serif; margin: 20pt 0 8pt; page-break-after: avoid; }
+h3 { font-size: 13pt; font-family: "Noto Sans CJK SC", sans-serif; margin: 14pt 0 6pt; page-break-after: avoid; }
+h4 { font-size: 12pt; font-family: "Noto Sans CJK SC", sans-serif; margin: 10pt 0 4pt; page-break-after: avoid; }
+p { text-indent: 2em; margin: 0 0 4pt; }
+.abstract { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 8pt 0; margin: 10pt 0 16pt; }
+.abstract p { text-indent: 2em; }
+.abstract .kw { text-indent: 0; margin-top: 6pt; }
+.abstract b.lbl { font-family: "Noto Sans CJK SC", sans-serif; }
+figure { margin: 10pt 0 12pt; text-align: center; page-break-inside: avoid; }
+figure img { max-width: 100%; }
+figcaption { font-size: 10.5pt; margin-top: 4pt; text-align: center; }
+figcaption b { font-family: "Noto Sans CJK SC", sans-serif; }
+.tcap { font-size: 10.5pt; text-align: center; margin: 10pt 0 4pt; page-break-after: avoid; }
+.tcap b { font-family: "Noto Sans CJK SC", sans-serif; }
+table { border-collapse: collapse; margin: 0 auto 12pt; font-size: 10pt; line-height: 1.35; page-break-inside: avoid; }
+th, td { padding: 3pt 6pt; text-align: center; }
+thead tr { border-top: 1.5px solid #000; border-bottom: 0.8px solid #000; }
+tbody tr:last-child { border-bottom: 1.5px solid #000; }
+td.l, th.l { text-align: left; }
+pre { font-family: "DejaVu Sans Mono", "Noto Sans Mono CJK SC", monospace; font-size: 8.6pt; line-height: 1.35;
+      background: #f6f6f4; border: 1px solid #ddd; padding: 6pt 8pt; white-space: pre-wrap; page-break-inside: avoid; margin: 6pt 0 10pt; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 10pt; }
+.refs p { text-indent: -2em; padding-left: 2em; font-size: 10.5pt; margin-bottom: 3pt; }
+ul, ol { margin: 2pt 0 6pt 1.5em; padding-left: 1em; }
+li { margin-bottom: 2pt; }
+.eq { text-align: center; margin: 6pt 0; font-style: italic; }
+.pb { page-break-before: always; }
+.note { font-size: 10pt; color: #444; text-indent: 0; }
+a { color: #000; text-decoration: none; word-break: break-all; }

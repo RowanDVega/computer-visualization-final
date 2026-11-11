@@ -1,0 +1,13 @@
+run,bad_lines_scalars,bad_lines_layers,raw_rows,dup_steps,missing_steps,nonfinite_loss,first_nonfinite_step,timing_contaminated
+R01_baseline,0,0,2500,0,0,0,,51
+R02_lr3e-4,0,0,2500,0,0,0,,51
+R03_lr3e-3,0,0,2500,0,0,0,,51
+R04_lr1e-2_noclip,0,0,2500,0,0,0,,51
+R05_nowarmup,0,0,2500,0,0,0,,51
+R06_noclip,0,0,2500,0,0,0,,51
+R07_bs16,0,0,2500,0,0,0,,51
+R08_nodropout,0,0,2500,0,0,0,,51
+R09_fault_lrspike,0,0,2500,0,0,0,,51
+R10_fault_corrupt,0,0,2500,0,0,0,,51
+R11_crash_resume,0,0,2872,372,0,0,,51
+R12_large,0,0,2500,0,0,0,,51

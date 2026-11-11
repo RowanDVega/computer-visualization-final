@@ -1,0 +1,3 @@
+run,fault,gt_start,gt_end,detected,delay_steps,detectors
+R09_fault_lrspike,lr_spike,1200,1230,True,0,"grad_explosion,large_update,loss_spike"
+R10_fault_corrupt,data_corruption,1800,1840,True,0,"grad_explosion,loss_spike"

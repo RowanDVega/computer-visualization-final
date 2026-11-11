@@ -1,0 +1,4025 @@
+{
+ "results": {
+  "R01_baseline": {
+   "health": "关注",
+   "events": [
+    {
+     "type": "overfitting",
+     "start": 2100,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.4439428389072417,
+      "best_step": 1300,
+      "final_val": 1.5146111965179443,
+      "final_gap": 0.6373067140579223
+     },
+     "run": "R01_baseline"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 2100,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.4439428389072417,
+       "best_step": 1300,
+       "final_val": 1.5146111965179443,
+       "final_gap": 0.6373067140579223
+      },
+      "run": "R01_baseline"
+     },
+     "window": {
+      "lr_ratio": 0.6178948956266872,
+      "loss_pre": 1.0394713083902996,
+      "loss_cur_max": 1.0565725564956665,
+      "gnorm_ratio": 1.2751284517008215,
+      "update_ratio_pre": 0.0013271993127326142,
+      "update_ratio_cur": 0.000848287398921031,
+      "val_pre": 1.4736323028802873,
+      "val_cur_max": 1.5146111965179443,
+      "module_spread": 0.05602374741530612,
+      "top_modules": [
+       "L1.mlp",
+       "L1.attn",
+       "L2.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 2.0,
+       "confidence": 0.7310585786300049,
+       "why": [
+        "验证损失自最优 1.444 回升"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.2689414213699951,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      2100,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R01_baseline",
+    "lr": 0.001,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 0.877304482460022,
+    "final_val": 1.5146111965179443,
+    "best_val": 1.4439428389072415,
+    "best_step": 1300,
+    "gen_gap": 0.6373067140579223,
+    "overfit_rise": 0.0706683576107025,
+    "diverged": false,
+    "gnorm_p99": 1.0226533632024275,
+    "loss_vol_mean": 0.023568185021589,
+    "tok_per_s_median": 886966.1542909509,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R02_lr3e-4": {
+   "health": "健康",
+   "events": [],
+   "diagnoses": [],
+   "advice": [],
+   "summary": {
+    "run": "R02_lr3e-4",
+    "lr": 0.0003,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 1.2528728425502778,
+    "final_val": 1.5029578924179077,
+    "best_val": 1.5029578924179077,
+    "best_step": 2499,
+    "gen_gap": 0.2500850498676299,
+    "overfit_rise": 0.0,
+    "diverged": false,
+    "gnorm_p99": 1.316632237567169,
+    "loss_vol_mean": 0.0244493882104454,
+    "tok_per_s_median": 886234.0792097084,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R03_lr3e-3": {
+   "health": "关注",
+   "events": [
+    {
+     "type": "overfitting",
+     "start": 1900,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.4425769031047821,
+      "best_step": 1300,
+      "final_val": 1.5877355992794038,
+      "final_gap": 0.8234933823347093
+     },
+     "run": "R03_lr3e-3"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 1900,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.4425769031047821,
+       "best_step": 1300,
+       "final_val": 1.5877355992794038,
+       "final_gap": 0.8234933823347093
+      },
+      "run": "R03_lr3e-3"
+     },
+     "window": {
+      "lr_ratio": 0.5203042627466621,
+      "loss_pre": 1.0224317898352941,
+      "loss_cur_max": 1.0295257568359375,
+      "gnorm_ratio": 1.3574931038176055,
+      "update_ratio_pre": 0.005078891711868171,
+      "update_ratio_cur": 0.00268950193677752,
+      "val_pre": 1.4776313573122024,
+      "val_cur_max": 1.5877355992794038,
+      "module_spread": 0.03998108411190915,
+      "top_modules": [
+       "L1.mlp",
+       "L2.attn",
+       "L1.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 2.0,
+       "confidence": 0.7310585786300049,
+       "why": [
+        "验证损失自最优 1.443 回升"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.2689414213699951,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1900,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R03_lr3e-3",
+    "lr": 0.003,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 0.7642422169446945,
+    "final_val": 1.5877355992794038,
+    "best_val": 1.442576903104782,
+    "best_step": 1300,
+    "gen_gap": 0.8234933823347093,
+    "overfit_rise": 0.1451586961746216,
+    "diverged": false,
+    "gnorm_p99": 1.1452421990976835,
+    "loss_vol_mean": 0.0249906166250624,
+    "tok_per_s_median": 885047.0311803722,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R04_lr1e-2_noclip": {
+   "health": "警告",
+   "events": [
+    {
+     "type": "grad_explosion",
+     "start": 411,
+     "end": 540,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 5.120012552807252,
+      "baseline_gnorm": 0.41642198400428587,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "head"
+      ]
+     },
+     "run": "R04_lr1e-2_noclip"
+    },
+    {
+     "type": "grad_explosion",
+     "start": 1155,
+     "end": 1155,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 393.3300996855412,
+      "baseline_gnorm": 1.8346951732153052,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L0.mlp"
+      ]
+     },
+     "run": "R04_lr1e-2_noclip"
+    },
+    {
+     "type": "grad_explosion",
+     "start": 1323,
+     "end": 1323,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 189.54365472948035,
+      "baseline_gnorm": 2.14220975512406,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L0.mlp"
+      ]
+     },
+     "run": "R04_lr1e-2_noclip"
+    },
+    {
+     "type": "grad_explosion",
+     "start": 1606,
+     "end": 1606,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 2251.557540133777,
+      "baseline_gnorm": 8.257715814931103,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L1.attn"
+      ]
+     },
+     "run": "R04_lr1e-2_noclip"
+    },
+    {
+     "type": "grad_explosion",
+     "start": 2423,
+     "end": 2465,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 290.5830667246084,
+      "baseline_gnorm": 5.814082722100826,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L1.attn"
+      ]
+     },
+     "run": "R04_lr1e-2_noclip"
+    },
+    {
+     "type": "stagnation",
+     "start": 1000,
+     "end": 2499,
+     "severity": "high",
+     "evidence": {
+      "loss_ema_min_after_1000": 2.6087238237089267,
+      "best_val": 2.4690795063972475
+     },
+     "run": "R04_lr1e-2_noclip"
+    },
+    {
+     "type": "attention_collapse",
+     "start": 250,
+     "end": 2499,
+     "severity": "high",
+     "evidence": {
+      "mean_entropy_min": 0.03102868464257982
+     },
+     "run": "R04_lr1e-2_noclip"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 411,
+      "end": 540,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 5.120012552807252,
+       "baseline_gnorm": 0.41642198400428587,
+       "top_modules": [
+        "embed",
+        "L0.attn",
+        "head"
+       ]
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.97059613935696,
+      "loss_pre": 2.50140753587087,
+      "loss_cur_max": 2.589413642883301,
+      "gnorm_ratio": 18.30463003186784,
+      "update_ratio_pre": 0.029506864541485888,
+      "update_ratio_cur": 0.020331268364160868,
+      "val_pre": 2.4912157595157622,
+      "val_cur_max": 2.5125694632530213,
+      "module_spread": 0.4609929312495295,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L1.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.5761168847658291,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "配置峰值学习率 1e-02 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 1155,
+      "end": 1155,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 393.3300996855412,
+       "baseline_gnorm": 1.8346951732153052,
+       "top_modules": [
+        "embed",
+        "L0.attn",
+        "L0.mlp"
+       ]
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.9148810655213685,
+      "loss_pre": 2.632223033905029,
+      "loss_cur_max": 2.647117853164673,
+      "gnorm_ratio": 289.99452657362593,
+      "update_ratio_pre": 0.013332900976619303,
+      "update_ratio_cur": 0.01578941244202181,
+      "val_pre": 2.566400194168091,
+      "val_cur_max": 2.5421849966049193,
+      "module_spread": 0.7147492594003235,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L1.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.5761168847658291,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "配置峰值学习率 1e-02 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 1323,
+      "end": 1323,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 189.54365472948035,
+       "baseline_gnorm": 2.14220975512406,
+       "top_modules": [
+        "embed",
+        "L0.attn",
+        "L0.mlp"
+       ]
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.8963429224252534,
+      "loss_pre": 2.636047836144765,
+      "loss_cur_max": 2.6504716873168945,
+      "gnorm_ratio": 83.61619360572321,
+      "update_ratio_pre": 0.012588877073694757,
+      "update_ratio_cur": 0.011145084318669072,
+      "val_pre": 2.5431959450244905,
+      "val_cur_max": 2.546036648750305,
+      "module_spread": 0.5823814722749472,
+      "top_modules": [
+       "L0.attn",
+       "embed",
+       "L0.mlp"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.5761168847658291,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "配置峰值学习率 1e-02 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 1606,
+      "end": 1606,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 2251.557540133777,
+       "baseline_gnorm": 8.257715814931103,
+       "top_modules": [
+        "embed",
+        "L0.attn",
+        "L1.attn"
+       ]
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.8619179237072603,
+      "loss_pre": 2.6495414773623147,
+      "loss_cur_max": 2.7226245403289795,
+      "gnorm_ratio": 308.65586608970784,
+      "update_ratio_pre": 0.00991255576561831,
+      "update_ratio_cur": 0.00847203261165221,
+      "val_pre": 2.5635898113250732,
+      "val_cur_max": 2.5718607544898986,
+      "module_spread": 0.8746803164189767,
+      "top_modules": [
+       "L0.attn",
+       "embed",
+       "L0.mlp"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.5761168847658291,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "配置峰值学习率 1e-02 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 2423,
+      "end": 2465,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 290.5830667246084,
+       "baseline_gnorm": 5.814082722100826,
+       "top_modules": [
+        "embed",
+        "L0.attn",
+        "L1.attn"
+       ]
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.8990776685544457,
+      "loss_pre": 2.6419272561868032,
+      "loss_cur_max": 2.6548166275024414,
+      "gnorm_ratio": 26.633671943535017,
+      "update_ratio_pre": 0.0029271102160079413,
+      "update_ratio_cur": 0.002526438922903012,
+      "val_pre": 2.536880296468735,
+      "val_cur_max": 2.519135367870331,
+      "module_spread": 0.434807254671968,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L2.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.5761168847658291,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "配置峰值学习率 1e-02 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "stagnation",
+      "start": 1000,
+      "end": 2499,
+      "severity": "high",
+      "evidence": {
+       "loss_ema_min_after_1000": 2.6087238237089267,
+       "best_val": 2.4690795063972475
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.4415671938772486,
+      "loss_pre": 2.700186570485433,
+      "loss_cur_max": 2.7226245403289795,
+      "gnorm_ratio": 979.1323351734136,
+      "update_ratio_pre": 0.015347982952805558,
+      "update_ratio_cur": 0.007760199428637781,
+      "val_pre": 2.5697074592113496,
+      "val_cur_max": 2.5990645051002503,
+      "module_spread": 0.9576519655757861,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L1.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 3.0,
+       "confidence": 0.6652409557748219,
+       "why": [
+        "配置峰值学习率 1e-02 偏大",
+        "峰值学习率 1e-02 使优化停留在高损失区域（最低平滑损失 2.61）"
+       ]
+      },
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.24472847105479764,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.09003057317038045,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "attention_collapse",
+      "start": 250,
+      "end": 2499,
+      "severity": "high",
+      "evidence": {
+       "mean_entropy_min": 0.03102868464257982
+      },
+      "run": "R04_lr1e-2_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.6805838371815817,
+      "loss_pre": 2.4971343358357747,
+      "loss_cur_max": 2.768336772918701,
+      "gnorm_ratio": 5142.357996005483,
+      "update_ratio_pre": 0.037304039767066664,
+      "update_ratio_cur": 0.011897274874900481,
+      "val_pre": 2.493286293745041,
+      "val_cur_max": 2.605351281166077,
+      "module_spread": 1.446168953895368,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L1.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 2.0,
+       "confidence": 0.7310585786300049,
+       "why": [
+        "配置峰值学习率 1e-02 偏大",
+        "验证损失同步上升 0.11，说明权重真实受损"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.2689414213699951,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "未启用梯度裁剪",
+     "action": "启用全局梯度范数裁剪（max_norm=1.0）",
+     "event": "grad_explosion",
+     "at": [
+      411,
+      540
+     ]
+    },
+    {
+     "cause": "学习率过高/学习率调度异常",
+     "action": "检查学习率调度器与配置热更新；将峰值学习率下调至 1/3，并从异常前最近检查点（≤1000步）回滚续训",
+     "event": "stagnation",
+     "at": [
+      1000,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R04_lr1e-2_noclip",
+    "lr": 0.01,
+    "warmup": 200,
+    "clip": 0.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 2.5221661925315857,
+    "final_val": 2.519135367870331,
+    "best_val": 2.4690795063972475,
+    "best_step": 200,
+    "gen_gap": -0.0030308246612547,
+    "overfit_rise": 0.0500558614730834,
+    "diverged": false,
+    "gnorm_p99": 140.62267592231512,
+    "loss_vol_mean": 0.0200232016011125,
+    "tok_per_s_median": 901936.931343597,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R05_nowarmup": {
+   "health": "警告",
+   "events": [
+    {
+     "type": "attention_collapse",
+     "start": 450,
+     "end": 1400,
+     "severity": "high",
+     "evidence": {
+      "mean_entropy_min": 0.35764340228504604
+     },
+     "run": "R05_nowarmup"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "attention_collapse",
+      "start": 450,
+      "end": 1400,
+      "severity": "high",
+      "evidence": {
+       "mean_entropy_min": 0.35764340228504604
+      },
+      "run": "R05_nowarmup"
+     },
+     "window": {
+      "lr_ratio": 0.7443104469373315,
+      "loss_pre": 2.3092996378739676,
+      "loss_cur_max": 2.1512510776519775,
+      "gnorm_ratio": 1.3284766167551358,
+      "update_ratio_pre": 0.01357759099307297,
+      "update_ratio_cur": 0.009169485919420194,
+      "val_pre": 2.3130250692367555,
+      "val_cur_max": 2.065880870819092,
+      "module_spread": 0.15717285076529033,
+      "top_modules": [
+       "L5.mlp",
+       "L4.attn",
+       "L4.mlp"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "缺少学习率预热",
+       "score": 3.0,
+       "confidence": 0.7869860421615985,
+       "why": [
+        "未配置 warmup：训练初期以峰值学习率直接更新，注意力 logits 迅速增大导致熵塌缩"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.10650697891920075,
+       "why": [
+        "配置峰值学习率 3e-03 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.10650697891920075,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "缺少学习率预热",
+     "action": "设置 warmup ≥ 200 步（约总步数 8%），或降低初始学习率",
+     "event": "attention_collapse",
+     "at": [
+      450,
+      1400
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R05_nowarmup",
+    "lr": 0.003,
+    "warmup": 1,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 1.1659932255744934,
+    "final_val": 1.491122841835022,
+    "best_val": 1.491122841835022,
+    "best_step": 2499,
+    "gen_gap": 0.3251296162605286,
+    "overfit_rise": 0.0,
+    "diverged": false,
+    "gnorm_p99": 0.6341604704962827,
+    "loss_vol_mean": 0.0271227270653236,
+    "tok_per_s_median": 885001.4389882677,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R06_noclip": {
+   "health": "警告",
+   "events": [
+    {
+     "type": "grad_explosion",
+     "start": 172,
+     "end": 172,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 4.099746291842124,
+      "baseline_gnorm": 0.566138943230461,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "head"
+      ]
+     },
+     "run": "R06_noclip"
+    },
+    {
+     "type": "overfitting",
+     "start": 1900,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.4269408404827117,
+      "best_step": 1300,
+      "final_val": 1.5543883621692658,
+      "final_gap": 0.7621957063674927
+     },
+     "run": "R06_noclip"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 172,
+      "end": 172,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 4.099746291842124,
+       "baseline_gnorm": 0.566138943230461,
+       "top_modules": [
+        "embed",
+        "L0.attn",
+        "head"
+       ]
+      },
+      "run": "R06_noclip"
+     },
+     "window": {
+      "lr_ratio": 2.276441671754014,
+      "loss_pre": 2.5919623831907908,
+      "loss_cur_max": 2.5180509090423584,
+      "gnorm_ratio": 7.090490093409419,
+      "update_ratio_pre": 0.011503001013769304,
+      "update_ratio_cur": 0.020015540518118883,
+      "val_pre": 3.28082218170166,
+      "val_cur_max": 2.3473307490348816,
+      "module_spread": 0.22733134619941148,
+      "top_modules": [
+       "embed",
+       "L0.attn",
+       "L2.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "未启用梯度裁剪",
+       "score": 2.0,
+       "confidence": 0.5761168847658291,
+       "why": [
+        "梯度裁剪关闭，尖峰直接作用于参数"
+       ]
+      },
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "配置峰值学习率 3e-03 偏大"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.21194155761708544,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 1900,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.4269408404827117,
+       "best_step": 1300,
+       "final_val": 1.5543883621692658,
+       "final_gap": 0.7621957063674927
+      },
+      "run": "R06_noclip"
+     },
+     "window": {
+      "lr_ratio": 0.5203042627466621,
+      "loss_pre": 1.037472882370154,
+      "loss_cur_max": 1.0434879064559937,
+      "gnorm_ratio": 1.4064341928891673,
+      "update_ratio_pre": 0.004656341093294262,
+      "update_ratio_cur": 0.002483980915212204,
+      "val_pre": 1.4547790855169296,
+      "val_cur_max": 1.5543883621692658,
+      "module_spread": 0.08098476731268231,
+      "top_modules": [
+       "L1.mlp",
+       "L2.attn",
+       "L1.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 2.0,
+       "confidence": 0.7310585786300049,
+       "why": [
+        "验证损失自最优 1.427 回升"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.2689414213699951,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "未启用梯度裁剪",
+     "action": "启用全局梯度范数裁剪（max_norm=1.0）",
+     "event": "grad_explosion",
+     "at": [
+      172,
+      172
+     ]
+    },
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1900,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R06_noclip",
+    "lr": 0.003,
+    "warmup": 200,
+    "clip": 0.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 0.7921926558017731,
+    "final_val": 1.5543883621692658,
+    "best_val": 1.4269408404827115,
+    "best_step": 1300,
+    "gen_gap": 0.7621957063674927,
+    "overfit_rise": 0.127447521686554,
+    "diverged": false,
+    "gnorm_p99": 1.2938737030436485,
+    "loss_vol_mean": 0.0250933282135272,
+    "tok_per_s_median": 900152.9529747714,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R07_bs16": {
+   "health": "健康",
+   "events": [],
+   "diagnoses": [],
+   "advice": [],
+   "summary": {
+    "run": "R07_bs16",
+    "lr": 0.001,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 16,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 1.268927925825119,
+    "final_val": 1.465989452600479,
+    "best_val": 1.465989452600479,
+    "best_step": 2499,
+    "gen_gap": 0.1970615267753601,
+    "overfit_rise": 0.0,
+    "diverged": false,
+    "gnorm_p99": 1.443588850282388,
+    "loss_vol_mean": 0.0484846156574638,
+    "tok_per_s_median": 605308.617574519,
+    "gpu_mem_mb": 569.984375
+   }
+  },
+  "R08_nodropout": {
+   "health": "关注",
+   "events": [
+    {
+     "type": "overfitting",
+     "start": 1100,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.517944973707199,
+      "best_step": 900,
+      "final_val": 3.1976334691047668,
+      "final_gap": 2.9967922501266
+     },
+     "run": "R08_nodropout"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 1100,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.517944973707199,
+       "best_step": 900,
+       "final_val": 3.1976334691047668,
+       "final_gap": 2.9967922501266
+      },
+      "run": "R08_nodropout"
+     },
+     "window": {
+      "lr_ratio": 0.4370399323006232,
+      "loss_pre": 1.11170088549455,
+      "loss_cur_max": 1.0800325870513916,
+      "gnorm_ratio": 2.4182735842947616,
+      "update_ratio_pre": 0.005646131473858879,
+      "update_ratio_cur": 0.0025111753212346453,
+      "val_pre": 1.5264129161834716,
+      "val_cur_max": 3.1976334691047668,
+      "module_spread": 0.09682314994429034,
+      "top_modules": [
+       "L1.attn",
+       "L2.attn",
+       "embed"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 3.5,
+       "confidence": 0.9241418199787563,
+       "why": [
+        "验证损失自最优 1.518 回升",
+        "未使用 dropout 正则化"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.07585818002124355,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 900 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1100,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R08_nodropout",
+    "lr": 0.001,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.0,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 0.2008412189781666,
+    "final_val": 3.1976334691047668,
+    "best_val": 1.517944973707199,
+    "best_step": 900,
+    "gen_gap": 2.9967922501266,
+    "overfit_rise": 1.6796884953975677,
+    "diverged": false,
+    "gnorm_p99": 1.8131816510026548,
+    "loss_vol_mean": 0.0236953252812853,
+    "tok_per_s_median": 895671.1946196757,
+    "gpu_mem_mb": 1597.20849609375
+   }
+  },
+  "R09_fault_lrspike": {
+   "health": "危险",
+   "events": [
+    {
+     "type": "loss_spike",
+     "start": 1201,
+     "end": 1223,
+     "severity": "high",
+     "evidence": {
+      "max_resid": 3.5605826377868652,
+      "max_z": 81.48342319880409,
+      "peak_loss": 6.9296135902404785
+     },
+     "run": "R09_fault_lrspike"
+    },
+    {
+     "type": "grad_explosion",
+     "start": 1201,
+     "end": 1222,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 18.48061320656451,
+      "baseline_gnorm": 0.418122895876488,
+      "top_modules": [
+       "head",
+       "L0.mlp",
+       "L3.attn"
+      ]
+     },
+     "run": "R09_fault_lrspike"
+    },
+    {
+     "type": "regression",
+     "start": 1200,
+     "end": 2499,
+     "severity": "critical",
+     "evidence": {
+      "best_val": 1.475312638282776,
+      "best_step": 1100,
+      "final_val": 2.2668699622154236,
+      "train_loss_final": 2.2614457607269287
+     },
+     "run": "R09_fault_lrspike",
+     "prior_shock": 1200,
+     "prior_type": "large_update"
+    },
+    {
+     "type": "large_update",
+     "start": 1200,
+     "end": 1220,
+     "severity": "high",
+     "evidence": {
+      "max_update_ratio": 0.09747556813823847,
+      "baseline_ratio": 0.004340875284721636,
+      "module": "L1.mlp"
+     },
+     "run": "R09_fault_lrspike"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "loss_spike",
+      "start": 1201,
+      "end": 1223,
+      "severity": "high",
+      "evidence": {
+       "max_resid": 3.5605826377868652,
+       "max_z": 81.48342319880409,
+       "peak_loss": 6.9296135902404785
+      },
+      "run": "R09_fault_lrspike"
+     },
+     "window": {
+      "lr_ratio": 12.861236332422083,
+      "loss_pre": 1.2581530332565307,
+      "loss_cur_max": 6.9296135902404785,
+      "gnorm_ratio": 49.9297999065597,
+      "update_ratio_pre": 0.004266121959141053,
+      "update_ratio_cur": 0.017622142477394232,
+      "val_pre": 2.7848042130470274,
+      "val_cur_max": 2.9857249736785887,
+      "module_spread": 0.19765305920084444,
+      "top_modules": [
+       "head",
+       "L5.attn",
+       "L4.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 5.5,
+       "confidence": 0.9890130573694068,
+       "why": [
+        "事件窗口学习率为前序窗口的 12.9 倍",
+        "参数更新比由 4.3e-03 升至 1.8e-02",
+        "验证损失同步上升 0.20，说明权重真实受损"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.01098694263059318,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 1201,
+      "end": 1222,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 18.48061320656451,
+       "baseline_gnorm": 0.418122895876488,
+       "top_modules": [
+        "head",
+        "L0.mlp",
+        "L3.attn"
+       ]
+      },
+      "run": "R09_fault_lrspike"
+     },
+     "window": {
+      "lr_ratio": 13.091690617793942,
+      "loss_pre": 1.2581530332565307,
+      "loss_cur_max": 6.9296135902404785,
+      "gnorm_ratio": 49.9297999065597,
+      "update_ratio_pre": 0.004266121959141053,
+      "update_ratio_cur": 0.017622142477394232,
+      "val_pre": 2.7848042130470274,
+      "val_cur_max": 2.9857249736785887,
+      "module_spread": 0.19765305920084444,
+      "top_modules": [
+       "head",
+       "L5.attn",
+       "L4.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 5.5,
+       "confidence": 0.9890130573694068,
+       "why": [
+        "事件窗口学习率为前序窗口的 13.1 倍",
+        "参数更新比由 4.3e-03 升至 1.8e-02",
+        "验证损失同步上升 0.20，说明权重真实受损"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.01098694263059318,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "regression",
+      "start": 1200,
+      "end": 2499,
+      "severity": "critical",
+      "evidence": {
+       "best_val": 1.475312638282776,
+       "best_step": 1100,
+       "final_val": 2.2668699622154236,
+       "train_loss_final": 2.2614457607269287
+      },
+      "run": "R09_fault_lrspike",
+      "prior_shock": 1200,
+      "prior_type": "large_update"
+     },
+     "window": {
+      "lr_ratio": 0.9389133754642485,
+      "loss_pre": 1.2585257122913995,
+      "loss_cur_max": 6.9296135902404785,
+      "gnorm_ratio": 49.9297999065597,
+      "update_ratio_pre": 0.0042930648035292744,
+      "update_ratio_cur": 0.0026479647956030358,
+      "val_pre": 1.4821407407522202,
+      "val_cur_max": 4.094295787811279,
+      "module_spread": 0.19764198204862626,
+      "top_modules": [
+       "head",
+       "L5.attn",
+       "L4.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "前序冲击造成的不可逆损伤",
+       "score": 3.5,
+       "confidence": 0.8589810786775898,
+       "why": [
+        "退化前第 1200 步发生 large_update，此后训练/验证损失同步停留在高位，无法自行恢复"
+       ]
+      },
+      {
+       "cause": "数值不稳定 / 训练发散",
+       "score": 1.0,
+       "confidence": 0.07050946066120506,
+       "why": [
+        "训练与验证损失同步恶化，权重已偏离良好区域"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.07050946066120506,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "large_update",
+      "start": 1200,
+      "end": 1220,
+      "severity": "high",
+      "evidence": {
+       "max_update_ratio": 0.09747556813823847,
+       "baseline_ratio": 0.004340875284721636,
+       "module": "L1.mlp"
+      },
+      "run": "R09_fault_lrspike"
+     },
+     "window": {
+      "lr_ratio": 13.755275881363147,
+      "loss_pre": 1.2585257122913995,
+      "loss_cur_max": 6.9296135902404785,
+      "gnorm_ratio": 49.9297999065597,
+      "update_ratio_pre": 0.0042930648035292744,
+      "update_ratio_cur": 0.030931046754201608,
+      "val_pre": 1.4821407407522202,
+      "val_cur_max": 4.094295787811279,
+      "module_spread": 0.19764198204862626,
+      "top_modules": [
+       "head",
+       "L5.attn",
+       "L4.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "学习率过高/学习率调度异常",
+       "score": 5.5,
+       "confidence": 0.9890130573694068,
+       "why": [
+        "事件窗口学习率为前序窗口的 13.8 倍",
+        "参数更新比由 4.3e-03 升至 3.1e-02",
+        "验证损失同步上升 2.61，说明权重真实受损"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.01098694263059318,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "学习率过高/学习率调度异常",
+     "action": "检查学习率调度器与配置热更新；将峰值学习率下调至 1/3，并从异常前最近检查点（≤1201步）回滚续训",
+     "event": "loss_spike",
+     "at": [
+      1201,
+      1223
+     ]
+    },
+    {
+     "cause": "前序冲击造成的不可逆损伤",
+     "action": "终止当前运行，回滚到第 1100 步（验证最优）检查点并修复诱因后续训，避免继续消耗算力",
+     "event": "regression",
+     "at": [
+      1200,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R09_fault_lrspike",
+    "lr": 0.001,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 2.2614457607269287,
+    "final_val": 2.266869962215424,
+    "best_val": 1.475312638282776,
+    "best_step": 1100,
+    "gen_gap": 0.0054242014884948,
+    "overfit_rise": 0.7915573239326477,
+    "diverged": false,
+    "gnorm_p99": 3.040312564183364,
+    "loss_vol_mean": 0.0312078088598926,
+    "tok_per_s_median": 885012.83659592,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R10_fault_corrupt": {
+   "health": "警告",
+   "events": [
+    {
+     "type": "loss_spike",
+     "start": 1800,
+     "end": 1841,
+     "severity": "high",
+     "evidence": {
+      "max_resid": 7.300955772399902,
+      "max_z": 127.6786735028724,
+      "peak_loss": 11.497537612915039
+     },
+     "run": "R10_fault_corrupt"
+    },
+    {
+     "type": "grad_explosion",
+     "start": 1800,
+     "end": 1808,
+     "severity": "high",
+     "evidence": {
+      "peak_gnorm": 11.291317057752611,
+      "baseline_gnorm": 0.4353023170580048,
+      "top_modules": [
+       "L0.attn",
+       "L0.mlp",
+       "L2.attn"
+      ]
+     },
+     "run": "R10_fault_corrupt"
+    },
+    {
+     "type": "overfitting",
+     "start": 1900,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.4439428389072417,
+      "best_step": 1300,
+      "final_val": 1.4954491913318635,
+      "final_gap": 0.585409387946129
+     },
+     "run": "R10_fault_corrupt"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "loss_spike",
+      "start": 1800,
+      "end": 1841,
+      "severity": "high",
+      "evidence": {
+       "max_resid": 7.300955772399902,
+       "max_z": 127.6786735028724,
+       "peak_loss": 11.497537612915039
+      },
+      "run": "R10_fault_corrupt"
+     },
+     "window": {
+      "lr_ratio": 0.8078627256913947,
+      "loss_pre": 1.0977115372816721,
+      "loss_cur_max": 11.497537612915039,
+      "gnorm_ratio": 27.655433671170123,
+      "update_ratio_pre": 0.002219791748233783,
+      "update_ratio_cur": 0.0025512443288718276,
+      "val_pre": 1.4538188934326173,
+      "val_cur_max": 1.4926847517490387,
+      "module_spread": 0.1301718727811809,
+      "top_modules": [
+       "L5.attn",
+       "L1.attn",
+       "L4.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "数据管道污染（标签/样本异常）",
+       "score": 5.0,
+       "confidence": 0.9820137900379083,
+       "why": [
+        "损失峰值 11.50 超过均匀猜测熵 ln65=4.17（比随机猜测更差，说明目标与输入不一致），而学习率未变",
+        "训练损失飙升但验证损失仅变化 +0.04，异常来自输入数据而非权重"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.017986209962091555,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "grad_explosion",
+      "start": 1800,
+      "end": 1808,
+      "severity": "high",
+      "evidence": {
+       "peak_gnorm": 11.291317057752611,
+       "baseline_gnorm": 0.4353023170580048,
+       "top_modules": [
+        "L0.attn",
+        "L0.mlp",
+        "L2.attn"
+       ]
+      },
+      "run": "R10_fault_corrupt"
+     },
+     "window": {
+      "lr_ratio": 0.8314759366775881,
+      "loss_pre": 1.0977115372816721,
+      "loss_cur_max": 11.497537612915039,
+      "gnorm_ratio": 27.655433671170123,
+      "update_ratio_pre": 0.002219791748233783,
+      "update_ratio_cur": 0.002020821866514921,
+      "val_pre": 1.4538188934326173,
+      "val_cur_max": 1.4926847517490387,
+      "module_spread": 0.13409338647516403,
+      "top_modules": [
+       "L5.attn",
+       "L1.attn",
+       "L4.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "数据管道污染（标签/样本异常）",
+       "score": 5.0,
+       "confidence": 0.9820137900379083,
+       "why": [
+        "损失峰值 11.50 超过均匀猜测熵 ln65=4.17（比随机猜测更差，说明目标与输入不一致），而学习率未变",
+        "训练损失飙升但验证损失仅变化 +0.04，异常来自输入数据而非权重"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.017986209962091555,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    },
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 1900,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.4439428389072417,
+       "best_step": 1300,
+       "final_val": 1.4954491913318635,
+       "final_gap": 0.585409387946129
+      },
+      "run": "R10_fault_corrupt"
+     },
+     "window": {
+      "lr_ratio": 0.5203042615340056,
+      "loss_pre": 2.916154874364535,
+      "loss_cur_max": 1.3318904638290405,
+      "gnorm_ratio": 1.6185251376344834,
+      "update_ratio_pre": 0.0021423648333116496,
+      "update_ratio_cur": 0.001036908938615229,
+      "val_pre": 1.4584775775671006,
+      "val_cur_max": 1.4954491913318635,
+      "module_spread": 0.240481714028544,
+      "top_modules": [
+       "L0.attn",
+       "embed",
+       "L1.mlp"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 2.0,
+       "confidence": 0.7310585786300049,
+       "why": [
+        "验证损失自最优 1.444 回升"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.2689414213699951,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "数据管道污染（标签/样本异常）",
+     "action": "隔离第 1800–1841 步对应的数据分片，校验 tokenizer/标签对齐与样本哈希；该段损失无需回滚但应剔除",
+     "event": "loss_spike",
+     "at": [
+      1800,
+      1841
+     ]
+    },
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1900,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R10_fault_corrupt",
+    "lr": 0.001,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 0.9100398033857344,
+    "final_val": 1.4954491913318635,
+    "best_val": 1.4439428389072415,
+    "best_step": 1300,
+    "gen_gap": 0.585409387946129,
+    "overfit_rise": 0.0515063524246217,
+    "diverged": false,
+    "gnorm_p99": 2.1623596423338127,
+    "loss_vol_mean": 0.0555573017303636,
+    "tok_per_s_median": 889353.7736479053,
+    "gpu_mem_mb": 1634.48974609375
+   }
+  },
+  "R11_crash_resume": {
+   "health": "关注",
+   "events": [
+    {
+     "type": "overfitting",
+     "start": 2200,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.4400092780590057,
+      "best_step": 1400,
+      "final_val": 1.5016159415245056,
+      "final_gap": 0.6233402252197265
+     },
+     "run": "R11_crash_resume"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 2200,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.4400092780590057,
+       "best_step": 1400,
+       "final_val": 1.5016159415245056,
+       "final_gap": 0.6233402252197265
+      },
+      "run": "R11_crash_resume"
+     },
+     "window": {
+      "lr_ratio": 0.6907333534745576,
+      "loss_pre": 1.0228160366415977,
+      "loss_cur_max": 1.0387142896652222,
+      "gnorm_ratio": 1.185896750533352,
+      "update_ratio_pre": 0.0011063705652261792,
+      "update_ratio_cur": 0.0007772928997441988,
+      "val_pre": 1.4696163803339004,
+      "val_cur_max": 1.5016159415245056,
+      "module_spread": 0.04598341820975559,
+      "top_modules": [
+       "L1.mlp",
+       "L1.attn",
+       "L2.attn"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 2.0,
+       "confidence": 0.7310585786300049,
+       "why": [
+        "验证损失自最优 1.440 回升"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.2689414213699951,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1400 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      2200,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R11_crash_resume",
+    "lr": 0.001,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 6,
+    "d": 384,
+    "params_M": 10.795776,
+    "final_train": 0.8782757163047791,
+    "final_val": 1.5016159415245056,
+    "best_val": 1.4400092780590057,
+    "best_step": 1400,
+    "gen_gap": 0.6233402252197265,
+    "overfit_rise": 0.0616066634654999,
+    "diverged": false,
+    "gnorm_p99": 0.9646072174015184,
+    "loss_vol_mean": 0.0233029014848602,
+    "tok_per_s_median": 846674.3474446799,
+    "gpu_mem_mb": 1676.87109375
+   }
+  },
+  "R12_large": {
+   "health": "关注",
+   "events": [
+    {
+     "type": "overfitting",
+     "start": 1700,
+     "end": 2499,
+     "severity": "medium",
+     "evidence": {
+      "best_val": 1.4615285217761993,
+      "best_step": 1300,
+      "final_val": 1.639407902956009,
+      "final_gap": 0.905563235282898
+     },
+     "run": "R12_large"
+    }
+   ],
+   "diagnoses": [
+    {
+     "event": {
+      "type": "overfitting",
+      "start": 1700,
+      "end": 2499,
+      "severity": "medium",
+      "evidence": {
+       "best_val": 1.4615285217761993,
+       "best_step": 1300,
+       "final_val": 1.639407902956009,
+       "final_gap": 0.905563235282898
+      },
+      "run": "R12_large"
+     },
+     "window": {
+      "lr_ratio": 0.4683088970152346,
+      "loss_pre": 1.0533128341039022,
+      "loss_cur_max": 1.086839199066162,
+      "gnorm_ratio": 1.5910748420931375,
+      "update_ratio_pre": 0.0018338888971307851,
+      "update_ratio_cur": 0.0008738753088444181,
+      "val_pre": 1.4835779130458833,
+      "val_cur_max": 1.639407902956009,
+      "module_spread": 0.057629670293353814,
+      "top_modules": [
+       "L1.attn",
+       "L1.mlp",
+       "L0.mlp"
+      ]
+     },
+     "causes": [
+      {
+       "cause": "容量过剩导致过拟合",
+       "score": 3.0,
+       "confidence": 0.8807970779778824,
+       "why": [
+        "验证损失自最优 1.462 回升",
+        "模型规模大于基线"
+       ]
+      },
+      {
+       "cause": "其他/未知原因",
+       "score": 1.0,
+       "confidence": 0.11920292202211755,
+       "why": [
+        "未被知识库覆盖的原因（基准假设）"
+       ]
+      }
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1700,
+      2499
+     ]
+    }
+   ],
+   "summary": {
+    "run": "R12_large",
+    "lr": 0.0006,
+    "warmup": 200,
+    "clip": 1.0,
+    "batch": 64,
+    "dropout": 0.2,
+    "layers": 8,
+    "d": 512,
+    "params_M": 25.417728,
+    "final_train": 0.733844667673111,
+    "final_val": 1.639407902956009,
+    "best_val": 1.4615285217761993,
+    "best_step": 1300,
+    "gen_gap": 0.905563235282898,
+    "overfit_rise": 0.1778793811798096,
+    "diverged": false,
+    "gnorm_p99": 1.35049992318141,
+    "loss_vol_mean": 0.0239769242472048,
+    "tok_per_s_median": 450959.5874659579,
+    "gpu_mem_mb": 2928.04150390625
+   }
+  }
+ },
+ "compare": {
+  "ranking": [
+   {
+    "run": "R06_noclip",
+    "best_val": 1.4269,
+    "best_step": 1300,
+    "gen_gap": 0.7622
+   },
+   {
+    "run": "R11_crash_resume",
+    "best_val": 1.44,
+    "best_step": 1400,
+    "gen_gap": 0.6233
+   },
+   {
+    "run": "R03_lr3e-3",
+    "best_val": 1.4426,
+    "best_step": 1300,
+    "gen_gap": 0.8235
+   },
+   {
+    "run": "R01_baseline",
+    "best_val": 1.4439,
+    "best_step": 1300,
+    "gen_gap": 0.6373
+   },
+   {
+    "run": "R10_fault_corrupt",
+    "best_val": 1.4439,
+    "best_step": 1300,
+    "gen_gap": 0.5854
+   },
+   {
+    "run": "R12_large",
+    "best_val": 1.4615,
+    "best_step": 1300,
+    "gen_gap": 0.9056
+   },
+   {
+    "run": "R07_bs16",
+    "best_val": 1.466,
+    "best_step": 2499,
+    "gen_gap": 0.1971
+   },
+   {
+    "run": "R09_fault_lrspike",
+    "best_val": 1.4753,
+    "best_step": 1100,
+    "gen_gap": 0.0054
+   },
+   {
+    "run": "R05_nowarmup",
+    "best_val": 1.4911,
+    "best_step": 2499,
+    "gen_gap": 0.3251
+   },
+   {
+    "run": "R02_lr3e-4",
+    "best_val": 1.503,
+    "best_step": 2499,
+    "gen_gap": 0.2501
+   },
+   {
+    "run": "R08_nodropout",
+    "best_val": 1.5179,
+    "best_step": 900,
+    "gen_gap": 2.9968
+   },
+   {
+    "run": "R04_lr1e-2_noclip",
+    "best_val": 2.4691,
+    "best_step": 200,
+    "gen_gap": -0.003
+   }
+  ],
+  "lr_sensitivity": [
+   {
+    "lr": 0.0003,
+    "best_val": 1.503
+   },
+   {
+    "lr": 0.001,
+    "best_val": 1.4439
+   },
+   {
+    "lr": 0.003,
+    "best_val": 1.4426
+   }
+  ],
+  "fleet_best": 1.4269408404827115
+ },
+ "report": "# TrainScope 训练健康诊断报告\n\n共分析 12 个运行；最佳验证损失 1.4269（R06_noclip）。\n\n## R01_baseline —— 关注\n- 最优验证损失 1.4439 @ step 1300，泛化差 0.637\n- [medium] overfitting @ 2100–2499：最可能根因「容量过剩导致过拟合」（置信度 73%；依据：验证损失自最优 1.444 回升）\n  - 建议：在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n\n## R02_lr3e-4 —— 健康\n- 最优验证损失 1.5030 @ step 2499，泛化差 0.250\n\n## R03_lr3e-3 —— 关注\n- 最优验证损失 1.4426 @ step 1300，泛化差 0.823\n- [medium] overfitting @ 1900–2499：最可能根因「容量过剩导致过拟合」（置信度 73%；依据：验证损失自最优 1.443 回升）\n  - 建议：在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n\n## R04_lr1e-2_noclip —— 警告\n- 最优验证损失 2.4691 @ step 200，泛化差 -0.003\n- [high] grad_explosion @ 411–540：最可能根因「未启用梯度裁剪」（置信度 58%；依据：梯度裁剪关闭，尖峰直接作用于参数）\n- [high] grad_explosion @ 1155–1155：最可能根因「未启用梯度裁剪」（置信度 58%；依据：梯度裁剪关闭，尖峰直接作用于参数）\n- [high] grad_explosion @ 1323–1323：最可能根因「未启用梯度裁剪」（置信度 58%；依据：梯度裁剪关闭，尖峰直接作用于参数）\n- [high] grad_explosion @ 1606–1606：最可能根因「未启用梯度裁剪」（置信度 58%；依据：梯度裁剪关闭，尖峰直接作用于参数）\n- [high] grad_explosion @ 2423–2465：最可能根因「未启用梯度裁剪」（置信度 58%；依据：梯度裁剪关闭，尖峰直接作用于参数）\n- [high] stagnation @ 1000–2499：最可能根因「学习率过高/学习率调度异常」（置信度 67%；依据：配置峰值学习率 1e-02 偏大；峰值学习率 1e-02 使优化停留在高损失区域（最低平滑损失 2.61））\n- [high] attention_collapse @ 250–2499：最可能根因「学习率过高/学习率调度异常」（置信度 73%；依据：配置峰值学习率 1e-02 偏大；验证损失同步上升 0.11，说明权重真实受损）\n  - 建议：启用全局梯度范数裁剪（max_norm=1.0）\n  - 建议：检查学习率调度器与配置热更新；将峰值学习率下调至 1/3，并从异常前最近检查点（≤1000步）回滚续训\n\n## R05_nowarmup —— 警告\n- 最优验证损失 1.4911 @ step 2499，泛化差 0.325\n- [high] attention_collapse @ 450–1400：最可能根因「缺少学习率预热」（置信度 79%；依据：未配置 warmup：训练初期以峰值学习率直接更新，注意力 logits 迅速增大导致熵塌缩）\n  - 建议：设置 warmup ≥ 200 步（约总步数 8%），或降低初始学习率\n\n## R06_noclip —— 警告\n- 最优验证损失 1.4269 @ step 1300，泛化差 0.762\n- [high] grad_explosion @ 172–172：最可能根因「未启用梯度裁剪」（置信度 58%；依据：梯度裁剪关闭，尖峰直接作用于参数）\n- [medium] overfitting @ 1900–2499：最可能根因「容量过剩导致过拟合」（置信度 73%；依据：验证损失自最优 1.427 回升）\n  - 建议：启用全局梯度范数裁剪（max_norm=1.0）\n  - 建议：在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n\n## R07_bs16 —— 健康\n- 最优验证损失 1.4660 @ step 2499，泛化差 0.197\n\n## R08_nodropout —— 关注\n- 最优验证损失 1.5179 @ step 900，泛化差 2.997\n- [medium] overfitting @ 1100–2499：最可能根因「容量过剩导致过拟合」（置信度 92%；依据：验证损失自最优 1.518 回升；未使用 dropout 正则化）\n  - 建议：在第 900 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n\n## R09_fault_lrspike —— 危险\n- 最优验证损失 1.4753 @ step 1100，泛化差 0.005\n- [high] loss_spike @ 1201–1223：最可能根因「学习率过高/学习率调度异常」（置信度 99%；依据：事件窗口学习率为前序窗口的 12.9 倍；参数更新比由 4.3e-03 升至 1.8e-02；验证损失同步上升 0.20，说明权重真实受损）\n- [high] grad_explosion @ 1201–1222：最可能根因「学习率过高/学习率调度异常」（置信度 99%；依据：事件窗口学习率为前序窗口的 13.1 倍；参数更新比由 4.3e-03 升至 1.8e-02；验证损失同步上升 0.20，说明权重真实受损）\n- [critical] regression @ 1200–2499：最可能根因「前序冲击造成的不可逆损伤」（置信度 86%；依据：退化前第 1200 步发生 large_update，此后训练/验证损失同步停留在高位，无法自行恢复）\n- [high] large_update @ 1200–1220：最可能根因「学习率过高/学习率调度异常」（置信度 99%；依据：事件窗口学习率为前序窗口的 13.8 倍；参数更新比由 4.3e-03 升至 3.1e-02；验证损失同步上升 2.61，说明权重真实受损）\n  - 建议：检查学习率调度器与配置热更新；将峰值学习率下调至 1/3，并从异常前最近检查点（≤1201步）回滚续训\n  - 建议：终止当前运行，回滚到第 1100 步（验证最优）检查点并修复诱因后续训，避免继续消耗算力\n\n## R10_fault_corrupt —— 警告\n- 最优验证损失 1.4439 @ step 1300，泛化差 0.585\n- [high] loss_spike @ 1800–1841：最可能根因「数据管道污染（标签/样本异常）」（置信度 98%；依据：损失峰值 11.50 超过均匀猜测熵 ln65=4.17（比随机猜测更差，说明目标与输入不一致），而学习率未变；训练损失飙升但验证损失仅变化 +0.04，异常来自输入数据而非权重）\n- [high] grad_explosion @ 1800–1808：最可能根因「数据管道污染（标签/样本异常）」（置信度 98%；依据：损失峰值 11.50 超过均匀猜测熵 ln65=4.17（比随机猜测更差，说明目标与输入不一致），而学习率未变；训练损失飙升但验证损失仅变化 +0.04，异常来自输入数据而非权重）\n- [medium] overfitting @ 1900–2499：最可能根因「容量过剩导致过拟合」（置信度 73%；依据：验证损失自最优 1.444 回升）\n  - 建议：隔离第 1800–1841 步对应的数据分片，校验 tokenizer/标签对齐与样本哈希；该段损失无需回滚但应剔除\n  - 建议：在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n\n## R11_crash_resume —— 关注\n- 最优验证损失 1.4400 @ step 1400，泛化差 0.623\n- [medium] overfitting @ 2200–2499：最可能根因「容量过剩导致过拟合」（置信度 73%；依据：验证损失自最优 1.440 回升）\n  - 建议：在第 1400 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n\n## R12_large —— 关注\n- 最优验证损失 1.4615 @ step 1300，泛化差 0.906\n- [medium] overfitting @ 1700–2499：最可能根因「容量过剩导致过拟合」（置信度 88%；依据：验证损失自最优 1.462 回升；模型规模大于基线）\n  - 建议：在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据\n",
+ "trace": [
+  {
+   "i": 0,
+   "agent": "Planner",
+   "kind": "plan",
+   "run": null,
+   "content": {
+    "runs": 12,
+    "routes": {
+     "R01_baseline": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R02_lr3e-4": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R03_lr3e-3": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R04_lr1e-2_noclip": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R05_nowarmup": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R06_noclip": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R07_bs16": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R08_nodropout": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R09_fault_lrspike": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R10_fault_corrupt": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R11_crash_resume": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ],
+     "R12_large": [
+      "monitor",
+      "diagnose",
+      "advise",
+      "report"
+     ]
+    }
+   },
+   "t_ms": 0.4
+  },
+  {
+   "i": 1,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R01_baseline",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 1,
+    "types": [
+     "overfitting"
+    ]
+   },
+   "t_ms": 10.4
+  },
+  {
+   "i": 2,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R01_baseline",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     2100,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.6179,
+     "loss_pre": 1.0395,
+     "loss_cur_max": 1.0566,
+     "gnorm_ratio": 1.2751,
+     "update_ratio_pre": 0.0013,
+     "update_ratio_cur": 0.0008,
+     "val_pre": 1.4736,
+     "val_cur_max": 1.5146,
+     "module_spread": 0.056,
+     "top_modules": [
+      "L1.mlp",
+      "L1.attn",
+      "L2.attn"
+     ]
+    }
+   },
+   "t_ms": 15.3
+  },
+  {
+   "i": 3,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R01_baseline",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 2.0,
+      "confidence": 0.7310585786300049,
+      "why": [
+       "验证损失自最优 1.444 回升"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.2689414213699951,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 15.3
+  },
+  {
+   "i": 4,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R01_baseline",
+   "content": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      2100,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 15.5
+  },
+  {
+   "i": 5,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R02_lr3e-4",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 0,
+    "types": []
+   },
+   "t_ms": 23.9
+  },
+  {
+   "i": 6,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R02_lr3e-4",
+   "content": [],
+   "t_ms": 24.0
+  },
+  {
+   "i": 7,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R03_lr3e-3",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 1,
+    "types": [
+     "overfitting"
+    ]
+   },
+   "t_ms": 32.5
+  },
+  {
+   "i": 8,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R03_lr3e-3",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1900,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.5203,
+     "loss_pre": 1.0224,
+     "loss_cur_max": 1.0295,
+     "gnorm_ratio": 1.3575,
+     "update_ratio_pre": 0.0051,
+     "update_ratio_cur": 0.0027,
+     "val_pre": 1.4776,
+     "val_cur_max": 1.5877,
+     "module_spread": 0.04,
+     "top_modules": [
+      "L1.mlp",
+      "L2.attn",
+      "L1.attn"
+     ]
+    }
+   },
+   "t_ms": 36.8
+  },
+  {
+   "i": 9,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R03_lr3e-3",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 2.0,
+      "confidence": 0.7310585786300049,
+      "why": [
+       "验证损失自最优 1.443 回升"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.2689414213699951,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 36.8
+  },
+  {
+   "i": 10,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R03_lr3e-3",
+   "content": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1900,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 37.0
+  },
+  {
+   "i": 11,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 7,
+    "types": [
+     "attention_collapse",
+     "grad_explosion",
+     "stagnation"
+    ]
+   },
+   "t_ms": 49.1
+  },
+  {
+   "i": 12,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     411,
+     540
+    ],
+    "result": {
+     "lr_ratio": 0.9706,
+     "loss_pre": 2.5014,
+     "loss_cur_max": 2.5894,
+     "gnorm_ratio": 18.3046,
+     "update_ratio_pre": 0.0295,
+     "update_ratio_cur": 0.0203,
+     "val_pre": 2.4912,
+     "val_cur_max": 2.5126,
+     "module_spread": 0.461,
+     "top_modules": [
+      "embed",
+      "L0.attn",
+      "L1.attn"
+     ]
+    }
+   },
+   "t_ms": 53.3
+  },
+  {
+   "i": 13,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.5761168847658291,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "配置峰值学习率 1e-02 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 53.3
+  },
+  {
+   "i": 14,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1155,
+     1155
+    ],
+    "result": {
+     "lr_ratio": 0.9149,
+     "loss_pre": 2.6322,
+     "loss_cur_max": 2.6471,
+     "gnorm_ratio": 289.9945,
+     "update_ratio_pre": 0.0133,
+     "update_ratio_cur": 0.0158,
+     "val_pre": 2.5664,
+     "val_cur_max": 2.5422,
+     "module_spread": 0.7147,
+     "top_modules": [
+      "embed",
+      "L0.attn",
+      "L1.attn"
+     ]
+    }
+   },
+   "t_ms": 57.4
+  },
+  {
+   "i": 15,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.5761168847658291,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "配置峰值学习率 1e-02 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 57.4
+  },
+  {
+   "i": 16,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1323,
+     1323
+    ],
+    "result": {
+     "lr_ratio": 0.8963,
+     "loss_pre": 2.636,
+     "loss_cur_max": 2.6505,
+     "gnorm_ratio": 83.6162,
+     "update_ratio_pre": 0.0126,
+     "update_ratio_cur": 0.0111,
+     "val_pre": 2.5432,
+     "val_cur_max": 2.546,
+     "module_spread": 0.5824,
+     "top_modules": [
+      "L0.attn",
+      "embed",
+      "L0.mlp"
+     ]
+    }
+   },
+   "t_ms": 61.4
+  },
+  {
+   "i": 17,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.5761168847658291,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "配置峰值学习率 1e-02 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 61.4
+  },
+  {
+   "i": 18,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1606,
+     1606
+    ],
+    "result": {
+     "lr_ratio": 0.8619,
+     "loss_pre": 2.6495,
+     "loss_cur_max": 2.7226,
+     "gnorm_ratio": 308.6559,
+     "update_ratio_pre": 0.0099,
+     "update_ratio_cur": 0.0085,
+     "val_pre": 2.5636,
+     "val_cur_max": 2.5719,
+     "module_spread": 0.8747,
+     "top_modules": [
+      "L0.attn",
+      "embed",
+      "L0.mlp"
+     ]
+    }
+   },
+   "t_ms": 65.4
+  },
+  {
+   "i": 19,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.5761168847658291,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "配置峰值学习率 1e-02 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 65.4
+  },
+  {
+   "i": 20,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     2423,
+     2465
+    ],
+    "result": {
+     "lr_ratio": 0.8991,
+     "loss_pre": 2.6419,
+     "loss_cur_max": 2.6548,
+     "gnorm_ratio": 26.6337,
+     "update_ratio_pre": 0.0029,
+     "update_ratio_cur": 0.0025,
+     "val_pre": 2.5369,
+     "val_cur_max": 2.5191,
+     "module_spread": 0.4348,
+     "top_modules": [
+      "embed",
+      "L0.attn",
+      "L2.attn"
+     ]
+    }
+   },
+   "t_ms": 69.5
+  },
+  {
+   "i": 21,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.5761168847658291,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "配置峰值学习率 1e-02 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 69.5
+  },
+  {
+   "i": 22,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1000,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.4416,
+     "loss_pre": 2.7002,
+     "loss_cur_max": 2.7226,
+     "gnorm_ratio": 979.1323,
+     "update_ratio_pre": 0.0153,
+     "update_ratio_cur": 0.0078,
+     "val_pre": 2.5697,
+     "val_cur_max": 2.5991,
+     "module_spread": 0.9577,
+     "top_modules": [
+      "embed",
+      "L0.attn",
+      "L1.attn"
+     ]
+    }
+   },
+   "t_ms": 74.0
+  },
+  {
+   "i": 23,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "stagnation",
+    "top": [
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 3.0,
+      "confidence": 0.6652409557748219,
+      "why": [
+       "配置峰值学习率 1e-02 偏大",
+       "峰值学习率 1e-02 使优化停留在高损失区域（最低平滑损失 2.61）"
+      ]
+     },
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.24472847105479764,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.09003057317038045,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 74.0
+  },
+  {
+   "i": 24,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     250,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.6806,
+     "loss_pre": 2.4971,
+     "loss_cur_max": 2.7683,
+     "gnorm_ratio": 5142.358,
+     "update_ratio_pre": 0.0373,
+     "update_ratio_cur": 0.0119,
+     "val_pre": 2.4933,
+     "val_cur_max": 2.6054,
+     "module_spread": 1.4462,
+     "top_modules": [
+      "embed",
+      "L0.attn",
+      "L1.attn"
+     ]
+    }
+   },
+   "t_ms": 78.6
+  },
+  {
+   "i": 25,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R04_lr1e-2_noclip",
+   "content": {
+    "event": "attention_collapse",
+    "top": [
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 2.0,
+      "confidence": 0.7310585786300049,
+      "why": [
+       "配置峰值学习率 1e-02 偏大",
+       "验证损失同步上升 0.11，说明权重真实受损"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.2689414213699951,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 78.6
+  },
+  {
+   "i": 26,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R04_lr1e-2_noclip",
+   "content": [
+    {
+     "cause": "未启用梯度裁剪",
+     "action": "启用全局梯度范数裁剪（max_norm=1.0）",
+     "event": "grad_explosion",
+     "at": [
+      411,
+      540
+     ]
+    },
+    {
+     "cause": "学习率过高/学习率调度异常",
+     "action": "检查学习率调度器与配置热更新；将峰值学习率下调至 1/3，并从异常前最近检查点（≤1000步）回滚续训",
+     "event": "stagnation",
+     "at": [
+      1000,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 78.8
+  },
+  {
+   "i": 27,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R05_nowarmup",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 1,
+    "types": [
+     "attention_collapse"
+    ]
+   },
+   "t_ms": 87.1
+  },
+  {
+   "i": 28,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R05_nowarmup",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     450,
+     1400
+    ],
+    "result": {
+     "lr_ratio": 0.7443,
+     "loss_pre": 2.3093,
+     "loss_cur_max": 2.1513,
+     "gnorm_ratio": 1.3285,
+     "update_ratio_pre": 0.0136,
+     "update_ratio_cur": 0.0092,
+     "val_pre": 2.313,
+     "val_cur_max": 2.0659,
+     "module_spread": 0.1572,
+     "top_modules": [
+      "L5.mlp",
+      "L4.attn",
+      "L4.mlp"
+     ]
+    }
+   },
+   "t_ms": 91.4
+  },
+  {
+   "i": 29,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R05_nowarmup",
+   "content": {
+    "event": "attention_collapse",
+    "top": [
+     {
+      "cause": "缺少学习率预热",
+      "score": 3.0,
+      "confidence": 0.7869860421615985,
+      "why": [
+       "未配置 warmup：训练初期以峰值学习率直接更新，注意力 logits 迅速增大导致熵塌缩"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.10650697891920075,
+      "why": [
+       "配置峰值学习率 3e-03 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.10650697891920075,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 91.4
+  },
+  {
+   "i": 30,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R05_nowarmup",
+   "content": [
+    {
+     "cause": "缺少学习率预热",
+     "action": "设置 warmup ≥ 200 步（约总步数 8%），或降低初始学习率",
+     "event": "attention_collapse",
+     "at": [
+      450,
+      1400
+     ]
+    }
+   ],
+   "t_ms": 91.6
+  },
+  {
+   "i": 31,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R06_noclip",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 2,
+    "types": [
+     "grad_explosion",
+     "overfitting"
+    ]
+   },
+   "t_ms": 100.7
+  },
+  {
+   "i": 32,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R06_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     172,
+     172
+    ],
+    "result": {
+     "lr_ratio": 2.2764,
+     "loss_pre": 2.592,
+     "loss_cur_max": 2.5181,
+     "gnorm_ratio": 7.0905,
+     "update_ratio_pre": 0.0115,
+     "update_ratio_cur": 0.02,
+     "val_pre": 3.2808,
+     "val_cur_max": 2.3473,
+     "module_spread": 0.2273,
+     "top_modules": [
+      "embed",
+      "L0.attn",
+      "L2.attn"
+     ]
+    }
+   },
+   "t_ms": 104.7
+  },
+  {
+   "i": 33,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R06_noclip",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "未启用梯度裁剪",
+      "score": 2.0,
+      "confidence": 0.5761168847658291,
+      "why": [
+       "梯度裁剪关闭，尖峰直接作用于参数"
+      ]
+     },
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "配置峰值学习率 3e-03 偏大"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.21194155761708544,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 104.8
+  },
+  {
+   "i": 34,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R06_noclip",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1900,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.5203,
+     "loss_pre": 1.0375,
+     "loss_cur_max": 1.0435,
+     "gnorm_ratio": 1.4064,
+     "update_ratio_pre": 0.0047,
+     "update_ratio_cur": 0.0025,
+     "val_pre": 1.4548,
+     "val_cur_max": 1.5544,
+     "module_spread": 0.081,
+     "top_modules": [
+      "L1.mlp",
+      "L2.attn",
+      "L1.attn"
+     ]
+    }
+   },
+   "t_ms": 108.9
+  },
+  {
+   "i": 35,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R06_noclip",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 2.0,
+      "confidence": 0.7310585786300049,
+      "why": [
+       "验证损失自最优 1.427 回升"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.2689414213699951,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 108.9
+  },
+  {
+   "i": 36,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R06_noclip",
+   "content": [
+    {
+     "cause": "未启用梯度裁剪",
+     "action": "启用全局梯度范数裁剪（max_norm=1.0）",
+     "event": "grad_explosion",
+     "at": [
+      172,
+      172
+     ]
+    },
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1900,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 109.1
+  },
+  {
+   "i": 37,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R07_bs16",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 0,
+    "types": []
+   },
+   "t_ms": 117.4
+  },
+  {
+   "i": 38,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R07_bs16",
+   "content": [],
+   "t_ms": 117.5
+  },
+  {
+   "i": 39,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R08_nodropout",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 1,
+    "types": [
+     "overfitting"
+    ]
+   },
+   "t_ms": 125.9
+  },
+  {
+   "i": 40,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R08_nodropout",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1100,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.437,
+     "loss_pre": 1.1117,
+     "loss_cur_max": 1.08,
+     "gnorm_ratio": 2.4183,
+     "update_ratio_pre": 0.0056,
+     "update_ratio_cur": 0.0025,
+     "val_pre": 1.5264,
+     "val_cur_max": 3.1976,
+     "module_spread": 0.0968,
+     "top_modules": [
+      "L1.attn",
+      "L2.attn",
+      "embed"
+     ]
+    }
+   },
+   "t_ms": 130.3
+  },
+  {
+   "i": 41,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R08_nodropout",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 3.5,
+      "confidence": 0.9241418199787563,
+      "why": [
+       "验证损失自最优 1.518 回升",
+       "未使用 dropout 正则化"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.07585818002124355,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 130.3
+  },
+  {
+   "i": 42,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R08_nodropout",
+   "content": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 900 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1100,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 130.4
+  },
+  {
+   "i": 43,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 4,
+    "types": [
+     "grad_explosion",
+     "large_update",
+     "loss_spike",
+     "regression"
+    ]
+   },
+   "t_ms": 140.8
+  },
+  {
+   "i": 44,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1201,
+     1223
+    ],
+    "result": {
+     "lr_ratio": 12.8612,
+     "loss_pre": 1.2582,
+     "loss_cur_max": 6.9296,
+     "gnorm_ratio": 49.9298,
+     "update_ratio_pre": 0.0043,
+     "update_ratio_cur": 0.0176,
+     "val_pre": 2.7848,
+     "val_cur_max": 2.9857,
+     "module_spread": 0.1977,
+     "top_modules": [
+      "head",
+      "L5.attn",
+      "L4.attn"
+     ]
+    }
+   },
+   "t_ms": 144.9
+  },
+  {
+   "i": 45,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "event": "loss_spike",
+    "top": [
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 5.5,
+      "confidence": 0.9890130573694068,
+      "why": [
+       "事件窗口学习率为前序窗口的 12.9 倍",
+       "参数更新比由 4.3e-03 升至 1.8e-02",
+       "验证损失同步上升 0.20，说明权重真实受损"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.01098694263059318,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 144.9
+  },
+  {
+   "i": 46,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1201,
+     1222
+    ],
+    "result": {
+     "lr_ratio": 13.0917,
+     "loss_pre": 1.2582,
+     "loss_cur_max": 6.9296,
+     "gnorm_ratio": 49.9298,
+     "update_ratio_pre": 0.0043,
+     "update_ratio_cur": 0.0176,
+     "val_pre": 2.7848,
+     "val_cur_max": 2.9857,
+     "module_spread": 0.1977,
+     "top_modules": [
+      "head",
+      "L5.attn",
+      "L4.attn"
+     ]
+    }
+   },
+   "t_ms": 148.8
+  },
+  {
+   "i": 47,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 5.5,
+      "confidence": 0.9890130573694068,
+      "why": [
+       "事件窗口学习率为前序窗口的 13.1 倍",
+       "参数更新比由 4.3e-03 升至 1.8e-02",
+       "验证损失同步上升 0.20，说明权重真实受损"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.01098694263059318,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 148.9
+  },
+  {
+   "i": 48,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1200,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.9389,
+     "loss_pre": 1.2585,
+     "loss_cur_max": 6.9296,
+     "gnorm_ratio": 49.9298,
+     "update_ratio_pre": 0.0043,
+     "update_ratio_cur": 0.0026,
+     "val_pre": 1.4821,
+     "val_cur_max": 4.0943,
+     "module_spread": 0.1976,
+     "top_modules": [
+      "head",
+      "L5.attn",
+      "L4.attn"
+     ]
+    }
+   },
+   "t_ms": 153.2
+  },
+  {
+   "i": 49,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "event": "regression",
+    "top": [
+     {
+      "cause": "前序冲击造成的不可逆损伤",
+      "score": 3.5,
+      "confidence": 0.8589810786775898,
+      "why": [
+       "退化前第 1200 步发生 large_update，此后训练/验证损失同步停留在高位，无法自行恢复"
+      ]
+     },
+     {
+      "cause": "数值不稳定 / 训练发散",
+      "score": 1.0,
+      "confidence": 0.07050946066120506,
+      "why": [
+       "训练与验证损失同步恶化，权重已偏离良好区域"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.07050946066120506,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 153.2
+  },
+  {
+   "i": 50,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1200,
+     1220
+    ],
+    "result": {
+     "lr_ratio": 13.7553,
+     "loss_pre": 1.2585,
+     "loss_cur_max": 6.9296,
+     "gnorm_ratio": 49.9298,
+     "update_ratio_pre": 0.0043,
+     "update_ratio_cur": 0.0309,
+     "val_pre": 1.4821,
+     "val_cur_max": 4.0943,
+     "module_spread": 0.1976,
+     "top_modules": [
+      "head",
+      "L5.attn",
+      "L4.attn"
+     ]
+    }
+   },
+   "t_ms": 157.2
+  },
+  {
+   "i": 51,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R09_fault_lrspike",
+   "content": {
+    "event": "large_update",
+    "top": [
+     {
+      "cause": "学习率过高/学习率调度异常",
+      "score": 5.5,
+      "confidence": 0.9890130573694068,
+      "why": [
+       "事件窗口学习率为前序窗口的 13.8 倍",
+       "参数更新比由 4.3e-03 升至 3.1e-02",
+       "验证损失同步上升 2.61，说明权重真实受损"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.01098694263059318,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 157.2
+  },
+  {
+   "i": 52,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R09_fault_lrspike",
+   "content": [
+    {
+     "cause": "学习率过高/学习率调度异常",
+     "action": "检查学习率调度器与配置热更新；将峰值学习率下调至 1/3，并从异常前最近检查点（≤1201步）回滚续训",
+     "event": "loss_spike",
+     "at": [
+      1201,
+      1223
+     ]
+    },
+    {
+     "cause": "前序冲击造成的不可逆损伤",
+     "action": "终止当前运行，回滚到第 1100 步（验证最优）检查点并修复诱因后续训，避免继续消耗算力",
+     "event": "regression",
+     "at": [
+      1200,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 157.4
+  },
+  {
+   "i": 53,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 3,
+    "types": [
+     "grad_explosion",
+     "loss_spike",
+     "overfitting"
+    ]
+   },
+   "t_ms": 166.8
+  },
+  {
+   "i": 54,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1800,
+     1841
+    ],
+    "result": {
+     "lr_ratio": 0.8079,
+     "loss_pre": 1.0977,
+     "loss_cur_max": 11.4975,
+     "gnorm_ratio": 27.6554,
+     "update_ratio_pre": 0.0022,
+     "update_ratio_cur": 0.0026,
+     "val_pre": 1.4538,
+     "val_cur_max": 1.4927,
+     "module_spread": 0.1302,
+     "top_modules": [
+      "L5.attn",
+      "L1.attn",
+      "L4.attn"
+     ]
+    }
+   },
+   "t_ms": 170.8
+  },
+  {
+   "i": 55,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "event": "loss_spike",
+    "top": [
+     {
+      "cause": "数据管道污染（标签/样本异常）",
+      "score": 5.0,
+      "confidence": 0.9820137900379083,
+      "why": [
+       "损失峰值 11.50 超过均匀猜测熵 ln65=4.17（比随机猜测更差，说明目标与输入不一致），而学习率未变",
+       "训练损失飙升但验证损失仅变化 +0.04，异常来自输入数据而非权重"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.017986209962091555,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 170.8
+  },
+  {
+   "i": 56,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1800,
+     1808
+    ],
+    "result": {
+     "lr_ratio": 0.8315,
+     "loss_pre": 1.0977,
+     "loss_cur_max": 11.4975,
+     "gnorm_ratio": 27.6554,
+     "update_ratio_pre": 0.0022,
+     "update_ratio_cur": 0.002,
+     "val_pre": 1.4538,
+     "val_cur_max": 1.4927,
+     "module_spread": 0.1341,
+     "top_modules": [
+      "L5.attn",
+      "L1.attn",
+      "L4.attn"
+     ]
+    }
+   },
+   "t_ms": 174.8
+  },
+  {
+   "i": 57,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "event": "grad_explosion",
+    "top": [
+     {
+      "cause": "数据管道污染（标签/样本异常）",
+      "score": 5.0,
+      "confidence": 0.9820137900379083,
+      "why": [
+       "损失峰值 11.50 超过均匀猜测熵 ln65=4.17（比随机猜测更差，说明目标与输入不一致），而学习率未变",
+       "训练损失飙升但验证损失仅变化 +0.04，异常来自输入数据而非权重"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.017986209962091555,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 174.8
+  },
+  {
+   "i": 58,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1900,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.5203,
+     "loss_pre": 2.9162,
+     "loss_cur_max": 1.3319,
+     "gnorm_ratio": 1.6185,
+     "update_ratio_pre": 0.0021,
+     "update_ratio_cur": 0.001,
+     "val_pre": 1.4585,
+     "val_cur_max": 1.4954,
+     "module_spread": 0.2405,
+     "top_modules": [
+      "L0.attn",
+      "embed",
+      "L1.mlp"
+     ]
+    }
+   },
+   "t_ms": 178.9
+  },
+  {
+   "i": 59,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R10_fault_corrupt",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 2.0,
+      "confidence": 0.7310585786300049,
+      "why": [
+       "验证损失自最优 1.444 回升"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.2689414213699951,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 179.0
+  },
+  {
+   "i": 60,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R10_fault_corrupt",
+   "content": [
+    {
+     "cause": "数据管道污染（标签/样本异常）",
+     "action": "隔离第 1800–1841 步对应的数据分片，校验 tokenizer/标签对齐与样本哈希；该段损失无需回滚但应剔除",
+     "event": "loss_spike",
+     "at": [
+      1800,
+      1841
+     ]
+    },
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1900,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 179.1
+  },
+  {
+   "i": 61,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R11_crash_resume",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 1,
+    "types": [
+     "overfitting"
+    ]
+   },
+   "t_ms": 187.5
+  },
+  {
+   "i": 62,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R11_crash_resume",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     2200,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.6907,
+     "loss_pre": 1.0228,
+     "loss_cur_max": 1.0387,
+     "gnorm_ratio": 1.1859,
+     "update_ratio_pre": 0.0011,
+     "update_ratio_cur": 0.0008,
+     "val_pre": 1.4696,
+     "val_cur_max": 1.5016,
+     "module_spread": 0.046,
+     "top_modules": [
+      "L1.mlp",
+      "L1.attn",
+      "L2.attn"
+     ]
+    }
+   },
+   "t_ms": 191.6
+  },
+  {
+   "i": 63,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R11_crash_resume",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 2.0,
+      "confidence": 0.7310585786300049,
+      "why": [
+       "验证损失自最优 1.440 回升"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.2689414213699951,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 191.6
+  },
+  {
+   "i": 64,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R11_crash_resume",
+   "content": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1400 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      2200,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 191.7
+  },
+  {
+   "i": 65,
+   "agent": "Monitor",
+   "kind": "tool_call",
+   "run": "R12_large",
+   "content": {
+    "tool": "anomaly.detect",
+    "n_events": 1,
+    "types": [
+     "overfitting"
+    ]
+   },
+   "t_ms": 200.1
+  },
+  {
+   "i": 66,
+   "agent": "Diagnostician",
+   "kind": "tool_call",
+   "run": "R12_large",
+   "content": {
+    "tool": "metrics.window",
+    "range": [
+     1700,
+     2499
+    ],
+    "result": {
+     "lr_ratio": 0.4683,
+     "loss_pre": 1.0533,
+     "loss_cur_max": 1.0868,
+     "gnorm_ratio": 1.5911,
+     "update_ratio_pre": 0.0018,
+     "update_ratio_cur": 0.0009,
+     "val_pre": 1.4836,
+     "val_cur_max": 1.6394,
+     "module_spread": 0.0576,
+     "top_modules": [
+      "L1.attn",
+      "L1.mlp",
+      "L0.mlp"
+     ]
+    }
+   },
+   "t_ms": 204.3
+  },
+  {
+   "i": 67,
+   "agent": "Diagnostician",
+   "kind": "hypotheses",
+   "run": "R12_large",
+   "content": {
+    "event": "overfitting",
+    "top": [
+     {
+      "cause": "容量过剩导致过拟合",
+      "score": 3.0,
+      "confidence": 0.8807970779778824,
+      "why": [
+       "验证损失自最优 1.462 回升",
+       "模型规模大于基线"
+      ]
+     },
+     {
+      "cause": "其他/未知原因",
+      "score": 1.0,
+      "confidence": 0.11920292202211755,
+      "why": [
+       "未被知识库覆盖的原因（基准假设）"
+      ]
+     }
+    ]
+   },
+   "t_ms": 204.3
+  },
+  {
+   "i": 68,
+   "agent": "Advisor",
+   "kind": "advice",
+   "run": "R12_large",
+   "content": [
+    {
+     "cause": "容量过剩导致过拟合",
+     "action": "在第 1300 步（验证最优）早停或保存最优检查点；增大 dropout/weight decay 或扩充数据",
+     "event": "overfitting",
+     "at": [
+      1700,
+      2499
+     ]
+    }
+   ],
+   "t_ms": 204.4
+  },
+  {
+   "i": 69,
+   "agent": "Comparator",
+   "kind": "compare",
+   "run": null,
+   "content": {
+    "ranking": [
+     {
+      "run": "R06_noclip",
+      "best_val": 1.4269,
+      "best_step": 1300,
+      "gen_gap": 0.7622
+     },
+     {
+      "run": "R11_crash_resume",
+      "best_val": 1.44,
+      "best_step": 1400,
+      "gen_gap": 0.6233
+     },
+     {
+      "run": "R03_lr3e-3",
+      "best_val": 1.4426,
+      "best_step": 1300,
+      "gen_gap": 0.8235
+     },
+     {
+      "run": "R01_baseline",
+      "best_val": 1.4439,
+      "best_step": 1300,
+      "gen_gap": 0.6373
+     },
+     {
+      "run": "R10_fault_corrupt",
+      "best_val": 1.4439,
+      "best_step": 1300,
+      "gen_gap": 0.5854
+     },
+     {
+      "run": "R12_large",
+      "best_val": 1.4615,
+      "best_step": 1300,
+      "gen_gap": 0.9056
+     },
+     {
+      "run": "R07_bs16",
+      "best_val": 1.466,
+      "best_step": 2499,
+      "gen_gap": 0.1971
+     },
+     {
+      "run": "R09_fault_lrspike",
+      "best_val": 1.4753,
+      "best_step": 1100,
+      "gen_gap": 0.0054
+     },
+     {
+      "run": "R05_nowarmup",
+      "best_val": 1.4911,
+      "best_step": 2499,
+      "gen_gap": 0.3251
+     },
+     {
+      "run": "R02_lr3e-4",
+      "best_val": 1.503,
+      "best_step": 2499,
+      "gen_gap": 0.2501
+     },
+     {
+      "run": "R08_nodropout",
+      "best_val": 1.5179,
+      "best_step": 900,
+      "gen_gap": 2.9968
+     },
+     {
+      "run": "R04_lr1e-2_noclip",
+      "best_val": 2.4691,
+      "best_step": 200,
+      "gen_gap": -0.003
+     }
+    ],
+    "lr_sensitivity": [
+     {
+      "lr": 0.0003,
+      "best_val": 1.503
+     },
+     {
+      "lr": 0.001,
+      "best_val": 1.4439
+     },
+     {
+      "lr": 0.003,
+      "best_val": 1.4426
+     }
+    ],
+    "fleet_best": 1.4269408404827115
+   },
+   "t_ms": 205.9
+  },
+  {
+   "i": 70,
+   "agent": "Reporter",
+   "kind": "report",
+   "run": null,
+   "content": {
+    "mode": "template",
+    "chars": 3842
+   },
+   "t_ms": 206.0
+  }
+ ]
+}

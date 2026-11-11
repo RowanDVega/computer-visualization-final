@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrainScope 训练监控</title>
+<style>
+:root{
+  color-scheme:light;
+  --page:#f9f9f7; --surface:#fcfcfb; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --wash:#f0efec;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --ctx:#d6d5ce;
+  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  --seq0:#f4f8fe; --seq1:#cde2fb; --seq2:#86b6ef; --seq3:#3987e5; --seq4:#256abf; --seq5:#184f95; --seq6:#0d366b;
+  --accent:#2a78d6;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --page:#0d0d0d; --surface:#1a1a19; --card:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10); --wash:#262624;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ctx:#3a3a37;
+    --seq0:#1d2633; --seq1:#184f95; --seq2:#256abf; --seq3:#3987e5; --seq4:#6da7ec; --seq5:#9ec5f4; --seq6:#cde2fb;
+    --accent:#3987e5;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0d0d0d; --surface:#1a1a19; --card:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10); --wash:#262624;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ctx:#3a3a37;
+  --seq0:#1d2633; --seq1:#184f95; --seq2:#256abf; --seq3:#3987e5; --seq4:#6da7ec; --seq5:#9ec5f4; --seq6:#cde2fb;
+  --accent:#3987e5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--ring);background:var(--card);position:sticky;top:0;z-index:5}
+header h1{font-size:18px;margin:0;font-weight:650;letter-spacing:.2px}
+header .sub{color:var(--muted);font-size:13px}
+header .sp{flex:1}
+button,select,input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--ring);border-radius:8px;padding:6px 10px}
+button{cursor:pointer} button:hover{background:var(--wash)}
+main{padding:16px 24px 40px;max-width:1600px;margin:0 auto}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
+.controls label{color:var(--ink2);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--ring);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer;background:var(--surface);color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ctx)}
+.chip.on{color:var(--ink);border-color:var(--axis)}
+.ask{display:flex;gap:8px;align-items:stretch;margin:4px 0 14px}
+.ask input{flex:1;padding:9px 12px}
+.answer{background:var(--card);border:1px solid var(--ring);border-left:3px solid var(--accent);border-radius:8px;padding:10px 14px;margin-bottom:14px;color:var(--ink2);display:none;white-space:pre-wrap}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.tile{background:var(--card);border:1px solid var(--ring);border-radius:10px;padding:12px 14px}
+.tile .k{font-size:12px;color:var(--muted)} .tile .v{font-size:24px;font-weight:600;margin-top:2px}
+.tile .d{font-size:12px;color:var(--ink2)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--ring);color:var(--ink)}
+.badge i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--ring);border-radius:10px;padding:12px 14px;min-width:0}
+.card h3{margin:0 0 2px;font-size:14px;font-weight:600}
+.card .hint{font-size:12px;color:var(--muted);margin-bottom:6px}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c7{grid-column:span 7}.c6{grid-column:span 6}.c5{grid-column:span 5}.c4{grid-column:span 4}
+.ch{width:100%;height:260px}.ch.tall{height:340px}.ch.short{height:190px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:5px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+th{color:var(--muted);font-weight:500;cursor:pointer;position:sticky;top:0;background:var(--card)}
+td:first-child,th:first-child{text-align:left}
+tbody tr{cursor:pointer} tbody tr:hover{background:var(--wash)} tbody tr.sel{background:var(--wash);font-weight:600}
+.tablewrap{max-height:360px;overflow:auto}
+.diag{border:1px solid var(--ring);border-radius:8px;padding:8px 10px;margin:8px 0}
+.diag .h{display:flex;gap:8px;align-items:center;font-weight:600;font-size:13px}
+.bar{height:6px;border-radius:3px;background:var(--accent)}
+.cause{display:grid;grid-template-columns:200px 1fr 44px;gap:8px;align-items:center;font-size:12px;margin:3px 0;color:var(--ink2)}
+.why{font-size:12px;color:var(--muted);margin:2px 0 0 4px}
+.adv{font-size:12.5px;margin:4px 0;padding-left:14px;position:relative;color:var(--ink)}
+.adv:before{content:"→";position:absolute;left:0;color:var(--accent)}
+.trace{max-height:300px;overflow:auto;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.trace div{padding:3px 0;border-bottom:1px dashed var(--grid);color:var(--ink2)}
+.trace b{color:var(--ink)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin:2px 0 4px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px}
+.tabs{display:flex;gap:6px;margin-bottom:6px}.tabs button{padding:3px 10px;font-size:12px}.tabs button.on{background:var(--wash);border-color:var(--axis)}
+@media (max-width:1000px){.c8,.c7,.c6,.c5,.c4{grid-column:span 12}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:12px 16px}header{padding:12px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>TrainScope</h1><span class="sub">大模型训练过程多维可视化监控与智能诊断</span>
+  <span class="sp"></span>
+  <button id="themeBtn" title="切换明暗主题">◐ 主题</button>
+</header>
+<main>
+  <div class="controls">
+    <label>焦点运行</label><select id="focusSel"></select>
+    <label>对比运行（最多 2 个）</label><div class="chips" id="cmpChips"></div>
+    <label><input type="checkbox" id="ctxChk" checked> 其余运行作灰色背景</label>
+    <button id="resetBtn">重置视图</button>
+  </div>
+  <div class="ask">
+    <input id="askIn" placeholder="自然语言提问，如：哪个运行最好？ / R09 为什么出问题？ / 比较 R01 和 R12 / 看 1150 到 1350 步 / 哪些过拟合了？">
+    <button id="askBtn">提问</button>
+  </div>
+  <div class="answer" id="answer"></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <div class="card c8"><h3>损失曲线</h3><div class="hint">细线：逐步训练损失 EMA；带点线：验证损失；色带：焦点运行的异常事件。框选或拖动下方滑块可联动所有时间视图，点击曲线可定位注意力探针。</div>
+      <div class="legend" id="lossLegend"></div><div class="ch tall" id="cLoss"></div></div>
+    <div class="card c4"><h3>运行健康总览</h3><div class="hint">点击行设为焦点运行，点击表头排序</div><div class="tablewrap"><table id="runTable"></table></div></div>
+
+    <div class="card c4"><h3>全局梯度范数（裁剪前，对数轴）</h3><div class="ch" id="cGrad"></div></div>
+    <div class="card c4"><h3>最大模块更新比 ‖ΔW‖/‖W‖（对数轴）</h3><div class="ch" id="cUpd"></div></div>
+    <div class="card c4"><h3>学习率</h3><div class="ch" id="cLr"></div></div>
+
+    <div class="card c7"><h3>模块 × 步 梯度热力图 · <span class="fname"></span></h3><div class="hint">颜色为 log10 模块梯度范数（10 步均值），与损失曲线时间范围联动</div><div class="ch tall" id="cHeat"></div></div>
+    <div class="card c5"><h3>注意力熵 层 × 头 · <span class="fname"></span></h3>
+      <div class="row"><button id="playBtn">▶ 播放</button><input type="range" id="probeSlider" min="0" max="0" value="0" style="flex:1"><span id="probeLbl" style="font-variant-numeric:tabular-nums;color:var(--ink2)"></span></div>
+      <div class="ch tall" id="cAttn"></div></div>
+
+    <div class="card c6"><h3>训练状态轨迹（模块梯度 PCA）</h3><div class="hint" id="pcaHint"></div><div class="ch tall" id="cPca"></div></div>
+    <div class="card c6"><h3>超参数 → 结果 平行坐标</h3><div class="hint">每条折线为一个运行；可在任一轴上刷选区间筛选</div><div class="ch tall" id="cPar"></div></div>
+
+    <div class="card c7"><h3>智能体诊断 · <span class="fname"></span></h3><div class="hint">Monitor → Diagnostician → Advisor 的结论；置信度为知识库规则得分的 softmax</div><div id="diag"></div></div>
+    <div class="card c5"><h3>多智能体工作流与执行轨迹</h3>
+      <div class="ch short" id="cFlow"></div>
+      <div class="tabs"><button class="on" data-t="trace">执行轨迹</button><button data-t="report">诊断报告</button></div>
+      <div class="trace" id="trace"></div></div>
+
+    <div class="card c6"><h3>字符嵌入投影（R01 基线）</h3>
+      <div class="tabs" id="embTabs"><button class="on" data-m="tsne">t-SNE</button><button data-m="pca">PCA</button></div>
+      <div class="ch tall" id="cEmb"></div></div>
+    <div class="card c6"><h3>数据质量报告</h3><div class="hint">原始日志清洗统计：重复步（续训）、缺失步、非有限损失、计时污染</div><div class="tablewrap"><table id="qTable"></table></div></div>
+  </div>
+</main>
+<script src="vendor/echarts.min.js"></script>
+<script src="data.js"></script>
+<script>
+const DATA = window.TS_DATA, RUNS = Object.keys(DATA.runs).sort();
+const SUM = Object.fromEntries(DATA.summary.map(s => [s.run, s]));
+const AG = DATA.agent.results;
+const TYPE_CN = {divergence:"发散", loss_spike:"损失尖峰", grad_explosion:"梯度爆炸", overfitting:"过拟合",
+  large_update:"更新比跃升", stagnation:"收敛停滞", regression:"持续退化", attention_collapse:"注意力塌缩", throughput_drop:"吞吐下降"};
+const SEV_CN = {critical:"严重", high:"高", medium:"中", low:"低"};
+const HEALTH = {"健康":"good","关注":"warning","警告":"serious","危险":"critical"};
+const HICON = {good:"✓", warning:"!", serious:"▲", critical:"✕"};
+let state = {focus:"R09_fault_lrspike", cmp:["R01_baseline"], ctx:true, zoom:null, probeIdx:0, embMode:"tsne"};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const short = r => r.split("_")[0];
+const charts = {};
+function mk(id){ const el=document.getElementById(id); if(charts[id]) charts[id].dispose(); charts[id]=echarts.init(el,null,{renderer:"canvas"}); return charts[id]; }
+const colorOf = r => r===state.focus ? css("--s1") : (state.cmp[0]===r ? css("--s2") : (state.cmp[1]===r ? css("--s3") : css("--ctx")));
+const active = () => [state.focus, ...state.cmp.filter(r => r!==state.focus)];
+
+function baseAxis(){ return {
+  axisLine:{lineStyle:{color:css("--axis")}}, axisTick:{show:false},
+  axisLabel:{color:css("--muted"), fontSize:11}, splitLine:{lineStyle:{color:css("--grid")}},
+  nameTextStyle:{color:css("--muted")} }; }
+function tip(){ return {trigger:"axis", backgroundColor:css("--card"), borderColor:css("--ring"), textStyle:{color:css("--ink"),fontSize:12},
+  axisPointer:{type:"line", lineStyle:{color:css("--muted"), width:1}}, confine:true}; }
+const ZOOM = () => [{type:"inside", xAxisIndex:0, filterMode:"none"}];
+
+// ------------------------------------------------------------ 时间序列（联动组）
+function seriesFor(key, opts={}){
+  const out=[]; const runs = state.ctx ? RUNS : active();
+  const order = runs.filter(r=>!active().includes(r)).concat(active());
+  for(const r of order){
+    const d=DATA.runs[r]; const on=active().includes(r);
+    const xs = opts.x ? d[opts.x] : d.step; const ys=d[key];
+    const pts=[]; for(let i=0;i<xs.length;i+=(opts.stride||1)) pts.push([xs[i], ys[i]]);
+    out.push({name:r, type:"line", data:pts, showSymbol:false, sampling:"lttb", silent:!on, z:on?3:1,
+      lineStyle:{width:on?1.8:0.8, color:colorOf(r)}, itemStyle:{color:colorOf(r)}, emphasis:{disabled:true},
+      tooltip:{show:on}});
+  }
+  return out;
+}
+function eventAreas(){
+  const res = AG[state.focus]; if(!res) return [];
+  let last=-1e9;
+  return res.events.filter(e=>e.type!=="throughput_drop").sort((a,b)=>a.start-b.start).map(e=>{ const show=e.start-last>120; if(show) last=e.start; return [
+    {xAxis:e.start, name:TYPE_CN[e.type], itemStyle:{color:css(e.severity==="critical"?"--critical":e.severity==="high"?"--serious":"--warning"), opacity:0.18},
+     label:{show, color:css("--ink2"), fontSize:11, position:"insideTop"}},
+    {xAxis:Math.max(e.end, e.start+12)}]; });
+}
+function drawLoss(){
+  const c=mk("cLoss"); const s=seriesFor("loss_ema");
+  for(const r of active()){
+    const d=DATA.runs[r];
+    s.push({name:r+" 验证", type:"line", data:d.ev_step.map((x,i)=>[x,d.val_loss[i]]), symbol:"circle", symbolSize:5, z:4,
+      lineStyle:{width:1.6,color:colorOf(r),type:"dashed"}, itemStyle:{color:colorOf(r), borderColor:css("--card"), borderWidth:1}});
+  }
+  const f=s.find(x=>x.name===state.focus); if(f) f.markArea={silent:true, data:eventAreas()};
+  c.setOption({animation:false, grid:{left:46,right:16,top:16,bottom:56}, tooltip:{...tip(), formatter:ps=>{
+      const p=ps.filter(x=>x.value[1]!=null); if(!p.length) return ""; let h=`step <b>${p[0].value[0]}</b>`;
+      for(const x of p) h+=`<br><span style="color:${x.color}">●</span> ${x.seriesName}: <b>${(+x.value[1]).toFixed(4)}</b>`; return h; }},
+    xAxis:{type:"value", name:"step", ...baseAxis(), min:0, max:2500}, yAxis:{type:"value", name:"损失", ...baseAxis(), min:0.6, max:4.4},
+    dataZoom:[...ZOOM(), {type:"slider", height:18, bottom:8, borderColor:css("--ring"), textStyle:{color:css("--muted")}, filterMode:"none"}],
+    toolbox:{right:8, top:-6, feature:{dataZoom:{yAxisIndex:"none", title:{zoom:"框选缩放", back:"还原"}}}, iconStyle:{borderColor:css("--muted")}},
+    series:s});
+  c.on("click", p=>{ if(p.value) setProbeByStep(p.value[0]); });
+  c.on("datazoom", ()=>syncZoom(c));
+  const lg=document.getElementById("lossLegend"); lg.innerHTML=active().map(r=>`<span><i style="background:${colorOf(r)}"></i>${r}</span>`).join("")+
+    (state.ctx?`<span><i style="background:${css("--ctx")}"></i>其余运行</span>`:"")+`<span><i style="background:transparent;border-top:2px dashed ${css("--ink2")}"></i>验证损失</span>`;
+}
+function drawSmall(id, key, opts){
+  const c=mk(id);
+  const s=seriesFor(key, opts);
+  c.setOption({animation:false, grid:{left:50,right:12,top:14,bottom:28}, tooltip:{...tip(), formatter:ps=>{
+      const p=ps.filter(x=>x.value[1]!=null); if(!p.length) return ""; let h=`step <b>${p[0].value[0]}</b>`;
+      for(const x of p) h+=`<br><span style="color:${x.color}">●</span> ${short(x.seriesName)}: <b>${(+x.value[1]).toExponential(2)}</b>`; return h; }},
+    xAxis:{type:"value", ...baseAxis(), min:0, max:2500}, yAxis:{type:opts.log?"log":"value", ...baseAxis(), axisLabel:{color:css("--muted"),fontSize:11,formatter:v=>v<0.01||v>=1000?(+v).toExponential(0):v}},
+    dataZoom:ZOOM(), series:s});
+  if(opts.ref) c.setOption({series:[{...s[s.length-1], markLine:{silent:true, symbol:"none", lineStyle:{color:css("--critical"),type:"dotted"}, label:{color:css("--critical"),fontSize:10, formatter:opts.refLabel}, data:[{yAxis:opts.ref}]}}]});
+  c.on("datazoom", ()=>syncZoom(c));
+}
+let syncing=false;
+function syncZoom(src){
+  if(syncing) return; syncing=true;
+  const opt=src.getOption(); const dz=opt.dataZoom[0]; const xr=src.getModel().getComponent("xAxis",0).axis.scale.getExtent();
+  state.zoom=[Math.round(xr[0]), Math.round(xr[1])];
+  for(const id of ["cLoss","cGrad","cUpd","cLr"]) if(charts[id] && charts[id]!==src) charts[id].dispatchAction({type:"dataZoom", startValue:state.zoom[0], endValue:state.zoom[1]});
+  zoomHeat(); syncing=false;
+}
+function zoomHeat(){
+  const c=charts.cHeat; if(!c||!state.zoom) return; const st=DATA.runs[state.focus].gmat_steps;
+  const a=st.findIndex(x=>x>=state.zoom[0]); let b=st.findIndex(x=>x>state.zoom[1]); if(b<0) b=st.length; c.dispatchAction({type:"dataZoom", startValue:Math.max(0,a), endValue:Math.max(0,b-1)});
+}
+function applyZoom(a,b){ state.zoom=[a,b]; for(const id of ["cLoss","cGrad","cUpd","cLr"]) charts[id].dispatchAction({type:"dataZoom", startValue:a, endValue:b}); zoomHeat(); }
+
+// ------------------------------------------------------------ 热力图
+function seqColors(){ return [css("--seq0"),css("--seq1"),css("--seq2"),css("--seq3"),css("--seq4"),css("--seq5"),css("--seq6")]; }
+function drawHeat(){
+  const d=DATA.runs[state.focus]; const c=mk("cHeat"); const data=[];
+  d.gmat.forEach((row,i)=>row.forEach((v,j)=>{ if(v!=null) data.push([i,j,v]); }));
+  c.setOption({animation:false, grid:{left:62,right:66,top:8,bottom:44},
+    tooltip:{confine:true, backgroundColor:css("--card"), borderColor:css("--ring"), textStyle:{color:css("--ink"),fontSize:12},
+      formatter:p=>`step ${d.gmat_steps[p.value[0]]}–${d.gmat_steps[p.value[0]]+9}<br>${d.mods[p.value[1]]}<br>梯度范数 <b>${Math.pow(10,p.value[2]).toExponential(2)}</b>`},
+    xAxis:{type:"category", data:d.gmat_steps, ...baseAxis(), splitLine:{show:false}, axisLabel:{color:css("--muted"),fontSize:10,interval:24}},
+    yAxis:{type:"category", data:d.mods, inverse:true, ...baseAxis(), splitLine:{show:false}, axisLabel:{color:css("--ink2"),fontSize:10}},
+    visualMap:{min:-2.6, max:0.6, calculable:true, orient:"vertical", right:0, top:"middle", itemHeight:180, text:["高","低"], textStyle:{color:css("--muted"),fontSize:11},
+      inRange:{color:seqColors()}, formatter:v=>"1e"+(+v).toFixed(1)},
+    dataZoom:[{type:"inside", xAxisIndex:0}, {type:"slider", height:14, bottom:6, borderColor:css("--ring"), showDetail:false}],
+    series:[{type:"heatmap", data, progressive:0, emphasis:{itemStyle:{borderColor:css("--ink"),borderWidth:1}}}]});
+  zoomHeat();
+}
+function drawAttn(){
+  const d=DATA.runs[state.focus]; const c=mk("cAttn"); const sl=document.getElementById("probeSlider");
+  sl.max=d.probe_step.length-1; if(state.probeIdx>sl.max) state.probeIdx=+sl.max; sl.value=state.probeIdx;
+  const M=d.entropy[state.probeIdx]; const L=M.length, H=M[0].length; const data=[];
+  M.forEach((row,l)=>row.forEach((v,h)=>data.push([h,l,v])));
+  document.getElementById("probeLbl").textContent=`step ${d.probe_step[state.probeIdx]}`;
+  c.setOption({animation:false, grid:{left:52,right:70,top:10,bottom:34},
+    tooltip:{backgroundColor:css("--card"), borderColor:css("--ring"), textStyle:{color:css("--ink"),fontSize:12}, formatter:p=>`层 L${p.value[1]} · 头 H${p.value[0]}<br>平均注意力熵 <b>${p.value[2].toFixed(3)}</b> nats`},
+    xAxis:{type:"category", name:"头", data:[...Array(H).keys()].map(i=>"H"+i), ...baseAxis(), splitLine:{show:false}},
+    yAxis:{type:"category", name:"层", data:[...Array(L).keys()].map(i=>"L"+i), inverse:true, ...baseAxis(), splitLine:{show:false}},
+    visualMap:{min:0, max:4.5, calculable:true, right:0, top:"middle", itemHeight:180, text:["分散","集中"], textStyle:{color:css("--muted"),fontSize:11}, inRange:{color:seqColors()}},
+    series:[{type:"heatmap", data, label:{show:true, fontSize:10, formatter:p=>`{${p.value[2]>2.2?"w":"k"}|${p.value[2].toFixed(2)}}`, rich:{w:{color:"#ffffff",fontSize:10}, k:{color:"#0b0b0b",fontSize:10}}}, itemStyle:{borderColor:css("--card"), borderWidth:2}}]});
+}
+function setProbeByStep(s){ const ps=DATA.runs[state.focus].probe_step; let bi=0; ps.forEach((x,i)=>{ if(Math.abs(x-s)<Math.abs(ps[bi]-s)) bi=i; }); state.probeIdx=bi; drawAttn(); }
+
+// ------------------------------------------------------------ PCA / 平行坐标 / 嵌入
+function drawPca(){
+  const c=mk("cPca"); const ev=DATA.pca_evr; document.getElementById("pcaHint").textContent=
+    `每点为 50 步窗口内 14 维模块 log 梯度范数的均值（标准化后 PCA，仅含 6 层同构运行）；PC1 ${(ev[0]*100).toFixed(1)}%，PC2 ${(ev[1]*100).toFixed(1)}% 方差。○ 起点，□ 终点`+(DATA.runs[state.focus].pca.length?"":`；${state.focus} 为 8 层结构，不在此空间中`);
+  const runs = state.ctx ? RUNS : active(); const order=runs.filter(r=>!active().includes(r)).concat(active()); const s=[];
+  for(const r of order){ const on=active().includes(r); const p=DATA.runs[r].pca; if(!p.length) continue;
+    s.push({name:r, type:"line", data:p, showSymbol:on, symbolSize:4, silent:!on, z:on?3:1, lineStyle:{width:on?1.8:0.8,color:colorOf(r)}, itemStyle:{color:colorOf(r)},
+      markPoint:on?{symbolSize:10, data:[{coord:p[0].slice(0,2), symbol:"circle"},{coord:p[p.length-1].slice(0,2), symbol:"rect"}], itemStyle:{color:colorOf(r), borderColor:css("--card"), borderWidth:2}, label:{show:false}}:undefined});
+  }
+  c.setOption({animation:false, grid:{left:44,right:16,top:12,bottom:36},
+    tooltip:{trigger:"item", backgroundColor:css("--card"), borderColor:css("--ring"), textStyle:{color:css("--ink"),fontSize:12}, formatter:p=>p.value?`${p.seriesName}<br>step ${p.value[2]}–${p.value[2]+49}`:p.seriesName},
+    xAxis:{type:"value", name:"PC1", ...baseAxis(), scale:true}, yAxis:{type:"value", name:"PC2", ...baseAxis(), scale:true}, series:s});
+  c.on("click", p=>{ if(p.value && p.value[2]!=null){ setFocus(p.seriesName); applyZoom(Math.max(0,p.value[2]-150), p.value[2]+200); setProbeByStep(p.value[2]); }});
+}
+function drawPar(){
+  const c=mk("cPar"); const dims=[["lr","学习率",1],["warmup","预热步",0],["clip","裁剪",0],["batch","批量",0],["dropout","dropout",0],["params_M","参数量/M",0],["best_val","最优验证",0],["gen_gap","泛化差",0]];
+  const data=DATA.summary.map(s=>({name:s.run, value:dims.map(d=>d[0]==="best_val"||d[0]==="gen_gap"?Math.min(s[d[0]]??4.2,4.2):s[d[0]]),
+    lineStyle:{color:colorOf(s.run), width:active().includes(s.run)?2.4:1, opacity:active().includes(s.run)?1:(state.ctx?0.9:0)}}));
+  c.setOption({animation:false, parallelAxis:dims.map((d,i)=>({dim:i, name:d[1], type:d[2]?"log":"value", scale:!d[2],
+      nameTextStyle:{color:css("--ink2"),fontSize:11}, axisLine:{lineStyle:{color:css("--axis")}}, axisLabel:{color:css("--muted"),fontSize:10}})),
+    parallel:{left:36,right:46,top:30,bottom:20}, tooltip:{trigger:"item", backgroundColor:css("--card"), textStyle:{color:css("--ink")}, formatter:p=>p.name},
+    series:[{type:"parallel", data, smooth:false, emphasis:{lineStyle:{width:3}}, inactiveOpacity:0.06, activeOpacity:1}]});
+  c.on("click", p=>p.name && setFocus(p.name));
+}
+function drawEmb(){
+  const c=mk("cEmb"); const m=state.embMode; const cls=["元音","小写辅音","大写辅音","标点","空白","数字"];
+  const col={"元音":css("--s2"),"小写辅音":css("--s1"),"大写辅音":css("--s3")}; const sym={"元音":"circle","小写辅音":"circle","大写辅音":"rect","标点":"triangle","空白":"diamond","数字":"pin"};
+  const s=cls.map(k=>({name:k, type:"scatter", symbol:sym[k], symbolSize:12, itemStyle:{color:col[k]||css("--muted"), borderColor:css("--card"), borderWidth:1},
+    data:DATA.embed.filter(e=>e.cls===k).map(e=>[e[m+"1"], e[m+"2"], e.char]),
+    label:{show:true, position:"right", fontSize:11, color:css("--ink"), formatter:p=>({"\n":"\\n"," ":"␣"})[p.value[2]]??p.value[2]}}));
+  c.setOption({animation:false, grid:{left:20,right:20,top:30,bottom:20}, legend:{top:0, textStyle:{color:css("--ink2")}, icon:"circle", itemHeight:9},
+    tooltip:{trigger:"item", backgroundColor:css("--card"), textStyle:{color:css("--ink")}, formatter:p=>`字符 “${JSON.stringify(p.value[2]).slice(1,-1)}” · ${p.seriesName}`},
+    xAxis:{type:"value", show:false, scale:true}, yAxis:{type:"value", show:false, scale:true}, series:s});
+}
+
+// ------------------------------------------------------------ 智能体
+function drawFlow(){
+  const tr=DATA.agent.trace; const cnt={}; tr.forEach(t=>cnt[t.agent]=(cnt[t.agent]||0)+1);
+  const N={Planner:[50,120],Monitor:[160,120],Diagnostician:[270,120],Advisor:[380,120],Reporter:[490,120],Comparator:[270,40]};
+  const E=[["Planner","Monitor"],["Monitor","Diagnostician"],["Diagnostician","Advisor"],["Advisor","Reporter"],["Planner","Comparator"],["Comparator","Reporter"]];
+  const r=n=>Math.min(20,9+Math.sqrt(cnt[n]||1)*1.3);
+  let svg=`<svg viewBox="0 0 540 180" width="100%" height="100%" role="img" aria-label="多智能体工作流"><defs><marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="${css("--muted")}"/></marker></defs>`;
+  for(const [u,v] of E){ const [x1,y1]=N[u],[x2,y2]=N[v]; const d=Math.hypot(x2-x1,y2-y1), ux=(x2-x1)/d, uy=(y2-y1)/d;
+    svg+=`<line x1="${x1+ux*r(u)}" y1="${y1+uy*r(u)}" x2="${x2-ux*(r(v)+3)}" y2="${y2-uy*(r(v)+3)}" stroke="${css("--axis")}" stroke-width="1.5" marker-end="url(#arw)"/>`; }
+  for(const [n,[x,y]] of Object.entries(N)){ const c=n==="Comparator"?css("--s3"):css("--s1");
+    svg+=`<circle cx="${x}" cy="${y}" r="${r(n)}" fill="${c}" stroke="${css("--card")}" stroke-width="2"><title>${n}: ${cnt[n]||0} 条消息</title></circle>`+
+      (n==="Comparator"?`<text x="${x+r(n)+6}" y="${y+4}" font-size="12" fill="${css("--ink")}">${n} · ${cnt[n]||0} 条</text>`
+      :`<text x="${x}" y="${y+r(n)+16}" font-size="12" text-anchor="middle" fill="${css("--ink")}">${n}</text><text x="${x}" y="${y+r(n)+30}" font-size="11" text-anchor="middle" fill="${css("--muted")}">${cnt[n]||0} 条</text>`); }
+  document.getElementById("cFlow").innerHTML=svg+"</svg>";
+}
+function drawTrace(mode){
+  const el=document.getElementById("trace");
+  if(mode==="report"){ el.style.whiteSpace="pre-wrap"; el.textContent=DATA.agent.report; return; }
+  el.style.whiteSpace="normal";
+  const items=DATA.agent.trace.filter(t=>!t.run||t.run===state.focus);
+  el.innerHTML=items.map(t=>`<div><b>#${t.i} ${t.agent}</b> · ${t.kind}${t.run?" · "+short(t.run):""} · ${t.t_ms}ms<br>${esc(JSON.stringify(t.content).slice(0,260))}</div>`).join("");
+}
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function drawDiag(){
+  const r=AG[state.focus]; const el=document.getElementById("diag"); const h=HEALTH[r.health];
+  let html=`<div class="row" style="margin-bottom:4px"><span class="badge"><i style="background:${css("--"+h)}"></i>${HICON[h]} ${r.health}</span><span style="color:var(--ink2);font-size:12px">${r.events.length} 个异常事件 · 点击事件可定位时间范围</span></div>`;
+  r.diagnoses.forEach((d,k)=>{ const e=d.event;
+    html+=`<div class="diag" data-a="${e.start}" data-b="${e.end}" style="cursor:pointer"><div class="h"><span class="badge"><i style="background:${css(e.severity==="critical"?"--critical":e.severity==="high"?"--serious":e.severity==="medium"?"--warning":"--seq2")}"></i>${SEV_CN[e.severity]}</span>${TYPE_CN[e.type]} · step ${e.start}–${e.end}</div>`;
+    d.causes.slice(0,3).forEach((c,i)=>{ html+=`<div class="cause"><span>${i===0?"<b>":""}${c.cause}${i===0?"</b>":""}</span><div class="bar" style="width:${Math.max(2,c.confidence*100)}%;opacity:${i===0?1:.45}"></div><span>${(c.confidence*100).toFixed(0)}%</span></div>`;
+      if(i===0) html+=c.why.map(w=>`<div class="why">· ${esc(w)}</div>`).join(""); });
+    html+=`</div>`; });
+  if(r.advice.length) html+=`<div style="margin-top:8px;font-weight:600;font-size:13px">处置建议（Advisor）</div>`+r.advice.map(a=>`<div class="adv">${esc(a.action)}</div>`).join("");
+  if(!r.events.length) html+=`<div class="why">未检测到异常，训练健康。</div>`;
+  el.innerHTML=html;
+  el.querySelectorAll(".diag").forEach(x=>x.onclick=()=>{ const a=+x.dataset.a,b=+x.dataset.b; applyZoom(Math.max(0,a-200), Math.min(2500,b+250)); setProbeByStep(a); });
+}
+
+// ------------------------------------------------------------ 表格与 KPI
+let sortKey="best_val", sortAsc=true;
+function drawTable(){
+  const cols=[["run","运行"],["health","健康"],["best_val","最优验证"],["best_step","最优步"],["gen_gap","泛化差"],["events","事件"]];
+  const rows=RUNS.map(r=>({run:r, health:AG[r].health, best_val:SUM[r].best_val, best_step:SUM[r].best_step, gen_gap:SUM[r].gen_gap, events:AG[r].events.length}));
+  rows.sort((a,b)=>{ const x=a[sortKey], y=b[sortKey]; const v=(x==null)-(y==null)|| (x>y?1:x<y?-1:0); return sortAsc?v:-v; });
+  const t=document.getElementById("runTable");
+  t.innerHTML=`<thead><tr>${cols.map(c=>`<th data-k="${c[0]}">${c[1]}${sortKey===c[0]?(sortAsc?" ↑":" ↓"):""}</th>`).join("")}</tr></thead><tbody>`+
+    rows.map(r=>{ const h=HEALTH[r.health]; return `<tr data-r="${r.run}" class="${r.run===state.focus?"sel":""}"><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${colorOf(r.run)};margin-right:6px"></span>${r.run}</td>
+      <td><span class="badge"><i style="background:${css("--"+h)}"></i>${HICON[h]} ${r.health}</span></td><td>${r.best_val?.toFixed(4)??"—"}</td><td>${r.best_step}</td><td>${r.gen_gap?.toFixed(3)??"—"}</td><td>${r.events}</td></tr>`; }).join("")+"</tbody>";
+  t.querySelectorAll("tbody tr").forEach(x=>x.onclick=()=>setFocus(x.dataset.r));
+  t.querySelectorAll("th").forEach(x=>x.onclick=()=>{ const k=x.dataset.k; sortAsc = sortKey===k ? !sortAsc : true; sortKey=k; drawTable(); });
+}
+function drawQ(){
+  const cols=[["run","运行"],["raw_rows","原始行"],["dup_steps","重复步"],["missing_steps","缺失步"],["nonfinite_loss","非有限损失"],["timing_contaminated","计时污染"]];
+  document.getElementById("qTable").innerHTML=`<thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>`+
+    DATA.quality.map(q=>`<tr><td>${q.run}</td>${cols.slice(1).map(c=>`<td>${q[c[0]]??0}</td>`).join("")}</tr>`).join("")+"</tbody>";
+}
+function drawKpis(){
+  const s=SUM[state.focus], r=AG[state.focus], h=HEALTH[r.health]; const best=Math.min(...DATA.summary.map(x=>x.best_val??99));
+  const tiles=[["健康状态",`<span class="badge" style="font-size:16px;padding:3px 12px"><i style="background:${css("--"+h)};width:10px;height:10px"></i>${HICON[h]} ${r.health}</span>`, `${r.events.length} 个异常事件`],
+    ["最优验证损失", s.best_val!=null?s.best_val.toFixed(4):"—", s.best_val!=null?`@ step ${s.best_step} · 舰队最优 ${best.toFixed(4)}`:"已发散"],
+    ["泛化差（最终）", s.gen_gap!=null?s.gen_gap.toFixed(3):"—", `过拟合回升 ${s.overfit_rise!=null?s.overfit_rise.toFixed(3):"—"}`],
+    ["梯度范数 P99", s.gnorm_p99!=null?s.gnorm_p99.toFixed(2):"—", `裁剪阈值 ${DATA.runs[state.focus].cfg.clip>0?DATA.runs[state.focus].cfg.clip:"关闭"}`],
+    ["吞吐（中位数）", (s.tok_per_s_median/1000).toFixed(0)+"k", `tokens/s · 参数 ${s.params_M.toFixed(1)}M`]];
+  document.getElementById("kpis").innerHTML=tiles.map(t=>`<div class="tile"><div class="k">${t[0]}</div><div class="v">${t[1]}</div><div class="d">${t[2]}</div></div>`).join("");
+  document.querySelectorAll(".fname").forEach(e=>e.textContent=state.focus);
+}
+function drawControls(){
+  const fs=document.getElementById("focusSel"); fs.innerHTML=RUNS.map(r=>`<option ${r===state.focus?"selected":""}>${r}</option>`).join("");
+  fs.onchange=()=>setFocus(fs.value);
+  document.getElementById("cmpChips").innerHTML=RUNS.filter(r=>r!==state.focus).map(r=>`<span class="chip ${state.cmp.includes(r)?"on":""}" data-r="${r}"><span class="dot" style="background:${state.cmp.includes(r)?colorOf(r):css("--ctx")}"></span>${short(r)}</span>`).join("");
+  document.querySelectorAll("#cmpChips .chip").forEach(x=>x.onclick=()=>{ const r=x.dataset.r; if(state.cmp.includes(r)) state.cmp=state.cmp.filter(y=>y!==r); else { state.cmp.push(r); if(state.cmp.length>2) state.cmp.shift(); } renderAll(); });
+}
+function defaultProbe(){ const r=AG[state.focus]; const e=r&&r.events.find(e=>e.type!=="overfitting"&&e.type!=="throughput_drop"); const ps=DATA.runs[state.focus].probe_step;
+  const s=e?e.start+50:ps[ps.length-1]; let bi=0; ps.forEach((x,i)=>{ if(Math.abs(x-s)<Math.abs(ps[bi]-s)) bi=i; }); state.probeIdx=bi; }
+function setFocus(r){ state.focus=r; state.cmp=state.cmp.filter(x=>x!==r); defaultProbe(); renderAll(); }
+function renderAll(){
+  drawControls(); drawKpis(); drawLoss();
+  drawSmall("cGrad","gnorm",{log:true, ref:1.0, refLabel:"裁剪阈值"}); drawSmall("cUpd","umax",{log:true, x:"u_step", ref:0.01, refLabel:"1e-2"}); drawSmall("cLr","lr",{log:false});
+  drawHeat(); drawAttn(); drawPca(); drawPar(); drawDiag(); drawTable(); drawTrace(document.querySelector(".tabs .on").dataset.t||"trace");
+  if(state.zoom) applyZoom(...state.zoom);
+}
+
+// ------------------------------------------------------------ 自然语言交互（意图识别 → 视图操作）
+function ask(q){
+  const out=document.getElementById("answer"); out.style.display="block"; const runs=[...q.matchAll(/R\s*(\d{1,2})/gi)].map(m=>RUNS.find(r=>r.startsWith("R"+m[1].padStart(2,"0")))).filter(Boolean);
+  const rng=q.match(/(\d{2,4})\s*(?:到|至|-|~|—)\s*(\d{2,4})/); let msg="";
+  if(/重置|reset/i.test(q)){ state={...state, focus:"R09_fault_lrspike", cmp:["R01_baseline"], zoom:null}; renderAll(); charts.cLoss.dispatchAction({type:"dataZoom",start:0,end:100}); msg="视图已重置。"; }
+  else if(/(比较|对比|vs)/i.test(q) && runs.length>=2){ state.focus=runs[0]; state.cmp=runs.slice(1,3); renderAll();
+    msg=runs.map(r=>`${r}：最优验证 ${SUM[r].best_val?.toFixed(4)??"—"}（step ${SUM[r].best_step}），泛化差 ${SUM[r].gen_gap?.toFixed(3)??"—"}，${AG[r].health}`).join("\n");
+    const b=runs.filter(r=>SUM[r].best_val!=null).sort((a,c)=>SUM[a].best_val-SUM[c].best_val)[0]; msg+=`\n→ ${b} 的最优验证损失最低。`; }
+  else if(/(最好|最佳|最优|best)/i.test(q)){ const b=DATA.agent.compare.ranking[0]; setFocus(b.run); msg=`最优运行为 ${b.run}，验证损失 ${b.best_val} @ step ${b.best_step}。前三名：`+DATA.agent.compare.ranking.slice(0,3).map(x=>`${x.run}(${x.best_val})`).join("、"); }
+  else if(/(发散|崩|最差)/.test(q)){ const d=RUNS.filter(r=>SUM[r].diverged); if(d.length){ setFocus(d[0]); msg=`发散运行：${d.join("、")}。`+(AG[d[0]].advice[0]?`\n建议：${AG[d[0]].advice[0].action}`:""); } else msg="没有运行发散。"; }
+  else if(/过拟合/.test(q)){ const o=RUNS.filter(r=>AG[r].events.some(e=>e.type==="overfitting")).sort((a,b)=>SUM[b].overfit_rise-SUM[a].overfit_rise);
+    if(o.length){ state.focus=o[0]; state.cmp=o.slice(1,3); renderAll(); } msg=`检测到过拟合的运行（按验证损失回升排序）：\n`+o.map(r=>`${r}：自 step ${SUM[r].best_step} 最优 ${SUM[r].best_val.toFixed(4)} 回升 ${SUM[r].overfit_rise.toFixed(3)}`).join("\n"); }
+  else if(rng){ if(runs[0]) setFocus(runs[0]); applyZoom(+rng[1], +rng[2]); setProbeByStep(+rng[1]); msg=`已将所有时间视图缩放到 step ${rng[1]}–${rng[2]}。`; }
+  else if(runs.length){ setFocus(runs[0]); const r=AG[runs[0]];
+    msg=`${runs[0]}：${r.health}。`+(r.diagnoses.length? r.diagnoses.map(d=>`\n· ${TYPE_CN[d.event.type]} @ ${d.event.start}–${d.event.end} → ${d.causes[0].cause}（${(d.causes[0].confidence*100).toFixed(0)}%）`).join(""):"未发现异常。")+
+      (r.advice.length?`\n建议：`+r.advice.map(a=>a.action).join("；"):"");
+    const e=r.events.find(e=>e.type!=="overfitting"&&e.type!=="throughput_drop"); if(e){ applyZoom(Math.max(0,e.start-200), Math.min(2500,e.end+250)); setProbeByStep(e.start); }
+    if(!new URLSearchParams(location.search).has("noscroll")) document.getElementById("diag").scrollIntoView({behavior:"smooth", block:"center"}); }
+  else msg="可以这样问：“哪个运行最好？”“R09 为什么出问题？”“比较 R01 和 R12”“看 1150 到 1350 步”“哪些过拟合了？”“重置”。";
+  out.textContent="🤖 "+msg;
+}
+
+// ------------------------------------------------------------ 事件绑定
+document.getElementById("askBtn").onclick=()=>ask(document.getElementById("askIn").value);
+document.getElementById("askIn").onkeydown=e=>{ if(e.key==="Enter") ask(e.target.value); };
+document.getElementById("ctxChk").onchange=e=>{ state.ctx=e.target.checked; renderAll(); };
+document.getElementById("resetBtn").onclick=()=>ask("重置");
+document.getElementById("probeSlider").oninput=e=>{ state.probeIdx=+e.target.value; drawAttn(); };
+let timer=null; document.getElementById("playBtn").onclick=e=>{ if(timer){ clearInterval(timer); timer=null; e.target.textContent="▶ 播放"; return; }
+  e.target.textContent="⏸ 暂停"; timer=setInterval(()=>{ const n=DATA.runs[state.focus].probe_step.length; state.probeIdx=(state.probeIdx+1)%n; drawAttn(); },250); };
+document.querySelectorAll(".card .tabs button[data-t]").forEach(b=>b.onclick=()=>{ b.parentNode.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); drawTrace(b.dataset.t); });
+document.querySelectorAll("#embTabs button").forEach(b=>b.onclick=()=>{ document.querySelectorAll("#embTabs button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); state.embMode=b.dataset.m; drawEmb(); });
+document.getElementById("themeBtn").onclick=()=>{ const cur=document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  document.documentElement.dataset.theme = cur==="dark"?"light":"dark"; renderAll(); drawEmb(); drawFlow(); drawQ(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ renderAll(); drawEmb(); drawFlow(); });
+window.addEventListener("resize",()=>Object.values(charts).forEach(c=>c.resize()));
+const qs=new URLSearchParams(location.search); if(qs.get("focus")) state.focus=qs.get("focus"); if(qs.get("cmp")) state.cmp=qs.get("cmp").split(",");
+if(qs.get("theme")) document.documentElement.dataset.theme=qs.get("theme");
+defaultProbe(); renderAll(); drawEmb(); drawFlow(); drawQ();
+if(qs.get("q")) { document.getElementById("askIn").value=qs.get("q"); ask(qs.get("q")); }
+if(qs.get("zoom")) applyZoom(...qs.get("zoom").split(",").map(Number));
+</script>
+</body>
+</html>
