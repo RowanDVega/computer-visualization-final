@@ -47,7 +47,9 @@ trainscope/dashboard.py   导出仪表盘数据
 web/index.html            交互式仪表盘（ECharts）
 data/runs/                原始 JSONL 日志
 data/processed/           清洗结果、摘要、事件、智能体输出
-paper/                    论文源文件（HTML → PDF）
+paper/latex/              论文 LaTeX 源文件（Overleaf + XeLaTeX 编译）
+paper/*.html, html2tex.py 论文初稿（HTML）及转 LaTeX 脚本
+paper/23307130324_杜禹衡_期末论文.pdf  论文 PDF
 ```
 
 ## 许可

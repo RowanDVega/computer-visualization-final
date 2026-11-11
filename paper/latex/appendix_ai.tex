@@ -1,0 +1,24 @@
+\section*{附录 B\quad AI 辅助过程与提示词交流记录（整理）}
+\addcontentsline{toc}{section}{附录 B AI 辅助过程与提示词交流记录}
+
+\noindent 本项目使用 Claude Code（模型 Claude Opus 5.5）作为编程与写作助手，在命令行中以智能体方式工作，能读写文件、执行命令和训练模型。下面按时间顺序整理主要的提示词与交流内容：“用户”一栏摘录原始提问，“AI”一栏概括其回复与执行的操作，“处理”一栏记录作者的核查与决定。
+
+\begin{enumerate}[label=\textbf{轮次 \arabic*}, leftmargin=0pt, itemindent=4.2em, itemsep=6pt]
+\item \textbf{用户}：“自行选题，根据 vis.md 的要求，完成整个任务（除了提交部分，我会亲自提交）。”\\
+\textbf{AI}：读取课程要求后，选定推荐场景“大模型训练监控”。由于服务器无法正常安装 scikit-learn，改用 numpy 自行实现 PCA 与 t-SNE。首轮 5000 步训练出现严重过拟合（验证损失由 1.48 升到 2.8），于是把步数改为 2500、dropout 改为 0.2 后重新扫描。续训脚本报错（随机数状态被加载到 GPU）后修复并重跑。根据探索性分析两次修正检测器：一是更新比改为相对阈值，二是注意力塌缩改为按全局平均熵判断，单个头的低熵不再报警。还修正了知识库把 R04 的孤立梯度尖峰误判为“数据污染”的问题。随后生成图表、仪表盘和论文初稿。\\
+\textbf{处理}：\textcolor{red}{【请作者据实填写：对初稿和仪表盘做了哪些审阅与修改】}
+
+\item \textbf{用户}：“文档格式正确吗……姓名、学号……生成 git，推送到 GitHub 仓库，然后把链接也加入论文当中。”\\
+\textbf{AI}：测量 PDF 的页边距与字号，指出服务器缺少宋体/Times New Roman，只能用近似字体替代；在论文中加入姓名、学号与仓库链接。推送时发现服务器默认 SSH 身份没有该仓库的写权限，便停下来说明情况，没有擅自尝试其他凭据。\\
+\textbf{处理}：作者决定为本仓库单独配置自己的 GitHub 账号。
+
+\item \textbf{用户}：“如何在本机器上登录 RowanDVega，提交记录也应该是 rowan 的。”\\
+\textbf{AI}：解释提交作者由 git 的 \texttt{user.name/user.email} 决定，与 SSH 身份无关。为本仓库生成专用密钥，设置仓库级的作者信息（GitHub noreply 邮箱），并提醒共享服务器上的私钥风险。\\
+\textbf{处理}：作者在 GitHub 添加公钥后完成推送，确认提交归属正确。
+
+\item \textbf{用户}：给出课程网页上的完整论文要求，要求改用 LaTeX 排版、字体必须正确，并补充 AI 提示词交流记录；渲染改由作者在 Overleaf 完成。\\
+\textbf{AI}：编写 HTML 到 LaTeX 的转换脚本，生成 \texttt{main.tex}。按宋体/Times New Roman、小四、1.5 倍行距、2.5\,cm 页边距设置版式，并整理了本附录。\\
+\textbf{处理}：由作者在 Overleaf 中使用 XeLaTeX 编译并导出 PDF。
+\end{enumerate}
+
+\noindent\textbf{说明}：所有实验数值都来自真实训练日志与脚本输出，可以用附录 A 的命令复现。

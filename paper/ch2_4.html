@@ -71,12 +71,13 @@
 
 <div class="tcap"><b>表3</b> 数据质量报告（清洗统计）</div>
 <table>
-<thead><tr><th class="l">运行</th><th>原始行（scalars）</th><th>坏行</th><th>重复步</th><th>缺失步</th><th>非有限损失</th><th>计时污染步</th><th>清洗后步数</th></tr></thead>
+<thead><tr><th class="l">运行</th><th>原始行</th><th>坏行</th><th>重复步</th><th>缺失步</th><th>非有限损失</th><th>计时污染步</th><th>清洗后步数</th></tr></thead>
 <tbody>
 <tr><td class="l">R01–R10、R12（各）</td><td>2,500</td><td>0</td><td>0</td><td>0</td><td>0</td><td>51</td><td>2,500</td></tr>
-<tr><td class="l">R11_crash_resume</td><td>2,872</td><td>0</td><td>372</td><td>0（崩溃文件中缺 27）</td><td>0</td><td>51</td><td>2,500</td></tr>
+<tr><td class="l">R11_crash_resume</td><td>2,872</td><td>0</td><td>372</td><td>0*</td><td>0</td><td>51</td><td>2,500</td></tr>
 <tr><td class="l">合计</td><td>30,372</td><td>0</td><td>372</td><td>0</td><td>0</td><td>612</td><td>30,000</td></tr>
 </tbody></table>
+<p class="note">注：表中“原始行”为 scalars.jsonl 的行数。* 崩溃前的日志文件缺少第 1373–1399 步（共 27 步），续训后补齐。</p>
 <p>值得一提的是，R04（学习率 1e-2、不裁剪）虽然梯度范数峰值达到 2,252，却没有出现 NaN。原因是 bf16 的指数范围与 fp32 相同，而且 AdamW 的更新幅度会被二阶矩归一化，单步更新不会随梯度一起无限放大。这一点说明，“没有 NaN”不能当作训练健康的依据，需要另外设计停滞和退化类检测器（见 4.4 节）。</p>
 <h3>3.3 特征工程</h3>
 <p>在清洗后的逐步数据上，本文构造了以下特征：</p>
